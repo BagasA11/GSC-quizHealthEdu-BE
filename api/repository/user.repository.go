@@ -8,13 +8,13 @@ import (
 
 // "time"
 // "BagasA11/GSC-quizHealthEdu-BE/api/models"
-type CashierRepository struct {
+type UserRepository struct {
 	Db *gorm.DB
 }
 
 /*create Cashier Repository instance*/
-func NewCashierRepository() *CashierRepository {
-	return &CashierRepository{
+func NewUserRepository() *UserRepository {
+	return &UserRepository{
 		Db: configs.GetDB(),
 	}
 }

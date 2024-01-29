@@ -9,12 +9,12 @@ import (
 
 // "golang.org/x/crypto/bcrypt"
 // "gorm.io/gorm"
-type Cashier struct {
+type User struct {
 	gorm.Model
 }
 
 // Before
-func (cashier *Cashier) BeforeCreate(tx *gorm.DB) error {
+func (User *User) BeforeCreate(tx *gorm.DB) error {
 
 	return nil
 }

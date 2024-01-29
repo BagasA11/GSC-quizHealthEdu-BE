@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"BagasA11/go-POS/configs"
+	"BagasA11/GSC-quizHealthEdu-BE/configs"
 	"fmt"
 	"log"
 	"time"

@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// "BagasA11/go-POS/api/models"
+// "BagasA11/GSC-quizHealthEdu-BE/api/models"
 
 //	"gorm.io/driver/mysql"
 //	"gorm.io/gorm"

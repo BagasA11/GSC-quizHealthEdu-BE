@@ -12,7 +12,7 @@ type UserRepository struct {
 	Db *gorm.DB
 }
 
-/*create Cashier Repository instance*/
+/*create User Repository instance*/
 func NewUserRepository() *UserRepository {
 	return &UserRepository{
 		Db: configs.GetDB(),

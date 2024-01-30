@@ -9,9 +9,9 @@ type TopUp struct {
 	ID     uint `gorm:"primaryKey"`
 	Status bool `gorm:"type:boolean; not null; default:true"`
 	UserID uint `gorm:"not null;"`
-	User   User
+	User   User `gorm:"constraint:OnDelete:CASCADE;"`
 	QuizID uint `gorm:"not null;"`
-	Quiz   Quiz
+	Quiz   Quiz `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 func (topUp *TopUp) BeforeCreate(tx *gorm.DB) error {

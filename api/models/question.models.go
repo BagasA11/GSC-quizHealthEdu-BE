@@ -10,7 +10,7 @@ type Question struct {
 	Question string `gorm:"not null"`
 	Answer   string `gorm:"not null;size:1"`
 	QuizID   uint
-	Quiz     Quiz
+	Quiz     Quiz `gorm:"constraint:OnDelete:CASCADE;"`
 	Option   []Option
 }
 

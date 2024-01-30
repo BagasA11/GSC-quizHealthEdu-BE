@@ -18,6 +18,7 @@ type User struct {
 	ID          uint   `gorm:"primaryKey"`
 	Username    string `gorm:"not null;unique;size:100"`
 	Email       string `gorm:"not null;unique;size:100"`
+	Block       bool   `gorm:"type:boolean; not null; default:false"`
 	Wallet      uint64 `gorm:"type:integer; not null; default:0"`
 	Password    string `gorm:"not null"`
 	Bio         *string

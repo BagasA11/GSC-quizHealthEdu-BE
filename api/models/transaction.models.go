@@ -9,7 +9,7 @@ import (
 type Transaction struct {
 	gorm.Model
 	ID        uint   `gorm:"primaryKey"`
-	Qty       uint64 `gorm:"not null"`
+	Price     uint64 `gorm:"not null"`
 	Pay       bool   `gorm:"type:boolean; not null; default:false"`
 	Cancel    bool   `gorm:"type:boolean; not null; default:false"`
 	PayAt     *time.Time

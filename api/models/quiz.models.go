@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -12,9 +14,9 @@ type Quiz struct {
 	Free      bool   `gorm:"type:boolean; not null; default:true"`
 	Price     *uint64
 	Disc      uint8 `gorm:"type:integer; not null; default:0"`
-	CreatedAt uint  `gorm:"type:integer; not null"`
-	UpdatedAt uint  `gorm:"type:integer; not null"`
-	DeletedAt uint  `gorm:"type:integer; default:null"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 	Score     []Score
 	TopUp     []TopUp
 	Question  []Question

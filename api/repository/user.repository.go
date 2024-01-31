@@ -101,6 +101,17 @@ func (ur *UserRepository) Updates(user models.User) error {
 	return nil
 }
 
+func (ur *UserRepository) SetBio(id uint, bio string) error {
+	tx := ur.Db.Begin()
+	err := tx.Model(&models.User{}).Where("id = ? AND admin = ?", id, false).Update("bio", bio).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
+}
+
 func (ur *UserRepository) BlockUser(id uint) error {
 	tx := ur.Db.Begin()
 	//SELECT * FROM users WHERE id = {id} AND admin = false

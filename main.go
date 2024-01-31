@@ -9,4 +9,5 @@ func main() {
 	fmt.Println("main.go")
 	fmt.Print("migrating db: ", configs.InitDb(), "\n")
 	fmt.Print("db infos: ", configs.GetDB(), "\n")
+
 }

@@ -29,3 +29,13 @@ type Options struct {
 	Txt   string `json:"detail" binding:"required"`
 	Color string `json:"color" binding:"required"`
 }
+
+type Scoring struct {
+	QuizID uint `json:"quizID" binding:"required"`
+	Quest  []QuesScoring
+}
+type QuesScoring struct {
+	ID     uint   `json:"ID" binding:"required"`
+	Ans    string `json:"QuestAnsw" binding:"required"`
+	Choose string `json:"answ" binding:"required"`
+}

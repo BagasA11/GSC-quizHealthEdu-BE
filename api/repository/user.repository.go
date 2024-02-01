@@ -32,8 +32,15 @@ func (ur *UserRepository) CreateUser(user models.User) error {
 	return err
 }
 
-// user section
 func (ur *UserRepository) FindId(id uint) (models.User, error) {
+	var user models.User
+	//SELECT * FROM users WHERE id = {id} AND admin = false
+	err := ur.Db.Where("id = ?", id).First(&user).Error
+	return user, err
+}
+
+// user section
+func (ur *UserRepository) FindUserId(id uint) (models.User, error) {
 	var user models.User
 	//SELECT * FROM users WHERE id = {id} AND admin = false
 	err := ur.Db.Where("id = ? AND admin = ?", id, false).First(&user).Error

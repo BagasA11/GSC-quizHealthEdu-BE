@@ -35,6 +35,12 @@ func (qstRepo *QuestionRepository) ReferToQuiz(quizId uint) ([]models.Question, 
 	return quest, err
 }
 
+func (qstRepo *QuestionRepository) GetQuestion(quizID uint) ([]models.Question, error) {
+	var quest []models.Question
+	err := qstRepo.Db.Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
+	return quest, err
+}
+
 func (qstRepo *QuestionRepository) Updates(quest models.Question) error {
 	tx := qstRepo.Db.Begin()
 	err := tx.Model(&models.Question{}).Where("id = ?", quest.ID).Updates(&quest).Error

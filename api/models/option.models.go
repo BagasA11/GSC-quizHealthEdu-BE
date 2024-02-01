@@ -24,5 +24,6 @@ func (opt *Option) BeforeCreate(tx *gorm.DB) (err error) {
 		err := errors.New("Alphabet column: " + strings.ToUpper(opt.Alphabet) + " must be in " + strings.Join(s, ","))
 		return err
 	}
+	opt.Alphabet = strings.ToUpper(opt.Alphabet)
 	return
 }

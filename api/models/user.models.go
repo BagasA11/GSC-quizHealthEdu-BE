@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -38,6 +39,10 @@ type User struct {
 // return error if occur
 func (user *User) BeforeCreate(tx *gorm.DB) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if user.Admin {
+		user.Username = user.adminID()
+	}
+
 	if err != nil {
 		return err
 	}
@@ -48,4 +53,8 @@ func (user *User) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("CreatedAt", time.Now().Unix())
 	tx.Statement.SetColumn("UpdatedAt", time.Now().Unix())
 	return nil
+}
+
+func (*User) adminID() string {
+	return uuid.NewString()
 }

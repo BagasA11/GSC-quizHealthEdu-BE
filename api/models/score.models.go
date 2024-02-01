@@ -23,7 +23,7 @@ type Score struct {
 // created_at and updated_at must be set
 func (score *Score) BeforeCreate(tx *gorm.DB) error {
 	// generate time
-	tx.Statement.SetColumn("CreatedAt", time.Now().Unix())
-	tx.Statement.SetColumn("UpdatedAt", time.Now().Unix())
+	tx.Statement.SetColumn("CreatedAt", time.Now())
+	tx.Statement.SetColumn("UpdatedAt", time.Now())
 	return nil
 }

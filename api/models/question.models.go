@@ -1,6 +1,10 @@
 package models
 
 import (
+	"errors"
+	"slices"
+	"strings"
+
 	"gorm.io/gorm"
 )
 
@@ -16,7 +20,11 @@ type Question struct {
 }
 
 // Before
-func (question *Question) BeforeCreate(tx *gorm.DB) error {
-
+func (q *Question) BeforeCreate(tx *gorm.DB) (err error) {
+	s := []string{"A", "B", "C", "D", "E"}
+	if !slices.Contains(s, strings.ToUpper(q.Answer)) {
+		err := errors.New("Alphabet column: " + strings.ToUpper(q.Answer) + " must be in " + strings.Join(s, ","))
+		return err
+	}
 	return nil
 }

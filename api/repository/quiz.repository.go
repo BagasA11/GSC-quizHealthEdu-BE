@@ -51,7 +51,7 @@ func (qr *QuizRepository) Free() ([]models.Quiz, error) {
 func (qr *QuizRepository) Cheapest() ([]models.Quiz, error) {
 	var cheapQuizzes []models.Quiz
 	//SELECT * FROM quizzess ORDER BY price ASC
-	err := qr.Db.Where("free = ?", false).Find(&cheapQuizzes).Order("price ASC").Error
+	err := qr.Db.Find(&cheapQuizzes).Order("price ASC").Error
 	return cheapQuizzes, err
 }
 

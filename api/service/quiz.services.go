@@ -55,8 +55,9 @@ func (qs *QuizService) FindTopic(topic string) ([]models.Quiz, error) {
 	return q, err
 }
 
-func (qs *QuizService) Update(req *dto.QuizCreate) error {
+func (qs *QuizService) Update(id uint, req *dto.QuizCreate) error {
 	q := models.Quiz{
+		ID:    id,
 		Title: req.Title,
 		Topic: req.Topic,
 	}

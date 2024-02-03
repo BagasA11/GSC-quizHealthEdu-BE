@@ -9,10 +9,11 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateAccessToken(ID uint, username string) (string, error) {
+func GenerateAccessToken(ID uint, username string, tokenType string) (string, error) {
 	claims := &configs.JWTClaims{
-		ID:       ID,
-		Username: username,
+		ID:        ID,
+		Username:  username,
+		TokenType: tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(20 * time.Hour)),
 		},
@@ -44,7 +45,7 @@ func UpdateToken(refreshToken string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	newToken, err := GenerateAccessToken(claims.ID, claims.Username)
+	newToken, err := GenerateAccessToken(claims.ID, claims.Username, claims.TokenType)
 	if err != nil {
 		return "", err
 	}

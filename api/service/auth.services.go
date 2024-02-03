@@ -35,7 +35,7 @@ func (as *AuthService) UserLogin(req *dto.UserLogin) (string, error) {
 		return "", errors.New("this user was blocked")
 	}
 
-	acessToken, err := helpers.GenerateAccessToken(user.ID, user.Username)
+	acessToken, err := helpers.GenerateAccessToken(user.ID, user.Username, "user")
 	return acessToken, err
 }
 
@@ -53,6 +53,6 @@ func (as *AuthService) AdmiLogin(req *dto.AdminLogin) (string, error) {
 		return "", errors.New("this user was blocked")
 	}
 
-	acessToken, err := helpers.GenerateAccessToken(user.ID, user.Username)
+	acessToken, err := helpers.GenerateAccessToken(user.ID, user.Username, "admin")
 	return acessToken, err
 }

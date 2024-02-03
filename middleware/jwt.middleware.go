@@ -38,6 +38,7 @@ func JwtAuth() gin.HandlerFunc {
 		}
 		ctx.Set("ID", claims.ID)
 		ctx.Set("username", claims.Username)
+		ctx.Set("TokenType", claims.TokenType)
 		ctx.Next()
 	}
 }

@@ -39,3 +39,8 @@ func (qst *QuestionService) Updates(id uint, req *dto.Question) error {
 	err := qst.repository.Updates(q)
 	return err
 }
+
+func (qst *QuestionService) Delete(id uint) error {
+	err := qst.repository.Delete(id)
+	return err
+}

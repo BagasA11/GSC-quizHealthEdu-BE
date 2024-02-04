@@ -188,3 +188,41 @@ func (uc *UserController) UpdatePassword(c *gin.Context) {
 		"message": "success",
 	})
 }
+
+func (uc *UserController) Delete(c *gin.Context) {
+	req := new(*dto.DeleteUser)
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		validationErrs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusBadRequest, "Invalid request")
+			return
+		}
+		var errorMessage string
+		for _, e := range validationErrs {
+			errorMessage = fmt.Sprintf("error in field %s condition: %s", e.Field(), e.ActualTag())
+			break
+		}
+		c.JSON(http.StatusBadRequest, errorMessage)
+		return
+	}
+
+	id, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "id value not found",
+		})
+		return
+	}
+	err = uc.service.DeleteUser(id.(uint), *req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "failed to update password",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success to Delete Account",
+	})
+}

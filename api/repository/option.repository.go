@@ -28,6 +28,12 @@ func (optRp *OptionRepository) Create(opt models.Option) error {
 	return err
 }
 
+func (optRp *OptionRepository) FindID(id uint) (models.Option, error) {
+	var opt models.Option
+	err := optRp.Db.Where("id = ?", id).First(&opt).Error
+	return opt, err
+}
+
 func (optRp *OptionRepository) ReferToQuestion(questID uint) ([]models.Option, error) {
 	var opts []models.Option
 	err := optRp.Db.Where("question_id = ?", questID).Find(&opts).Error

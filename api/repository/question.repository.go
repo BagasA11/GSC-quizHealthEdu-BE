@@ -35,12 +35,31 @@ func (qstRepo *QuestionRepository) ReferToQuiz(quizId uint) ([]models.Question, 
 	return quest, err
 }
 
-func (qstRepo *QuestionRepository) GetQuestion(quizID uint) ([]models.Question, error) {
+/*
+	func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint) ([]models.Question, error) {
+		//page_id from request url
+		var quest []models.Question
+		err := qstRepo.Db.Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
+		return quest, err
+	}
+*/
+func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint, page uint) ([]models.Question, error) {
+	//page_id from request url
 	var quest []models.Question
-	err := qstRepo.Db.Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
+	//offset = skip data
+	//limit = limit return data
+	//return data pagination
+	err := qstRepo.Db.Limit(1).Offset(int(page)-1).Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
+
 	return quest, err
 }
 
+/*
+	func (qstRepo *QuestionRepository) pagination(quizID uint, pageID uint) error {
+		//max data = 1
+
+}
+*/
 func (qstRepo *QuestionRepository) Updates(quest models.Question) error {
 	tx := qstRepo.Db.Begin()
 	err := tx.Model(&models.Question{}).Where("id = ?", quest.ID).Updates(&quest).Error

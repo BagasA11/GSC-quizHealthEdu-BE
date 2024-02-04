@@ -30,6 +30,11 @@ func (qst *QuestionService) ReferToQuiz(quizID uint) ([]models.Question, error) 
 	return q, err
 }
 
+func (qst *QuestionService) GetQuizAndOption(quizID uint, page uint) ([]models.Question, error) {
+	qs, err := qst.repository.GetQuestionAndOption(quizID, page)
+	return qs, err
+}
+
 func (qst *QuestionService) Updates(id uint, req *dto.Question) error {
 	q := models.Question{
 		ID:       id,

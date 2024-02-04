@@ -26,4 +26,5 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.POST("/user/admin/login", ac.AdmiLogin)
 	// update password
 	group.POST("/user/password", middleware.JwtAuth(), uc.UpdatePassword)
+	group.POST("/user/delete", middleware.JwtAuth(), uc.Delete)
 }

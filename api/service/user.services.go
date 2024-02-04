@@ -135,8 +135,8 @@ func (service *UserService) isPasswordMatch(id uint, input string) (bool, error)
 	return true, err
 }
 
-func (service *UserService) DeleteUser(id uint, password string) error {
-	match, err := service.isPasswordMatch(id, password)
+func (service *UserService) DeleteUser(id uint, req *dto.DeleteUser) error {
+	match, err := service.isPasswordMatch(id, req.Password)
 	if err != nil {
 		return err
 	}

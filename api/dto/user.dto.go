@@ -35,3 +35,7 @@ type UpdateUsername struct {
 type DeleteUser struct {
 	Password string `json:"password" binding:"required,min=8"`
 }
+
+type FindUsername struct {
+	Username string `json:"username" binding:"required,min=8"`
+}

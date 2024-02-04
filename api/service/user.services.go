@@ -51,6 +51,11 @@ func (service *UserService) GetAllUser() ([]models.User, error) {
 	return user, err
 }
 
+func (service *UserService) GetByID(id uint) (models.User, error) {
+	user, err := service.repository.FindId(id)
+	return user, err
+}
+
 func (service *UserService) GetUserByID(id uint) (models.User, error) {
 	user, err := service.repository.FindUserId(id)
 	return user, err
@@ -78,6 +83,11 @@ func (service *UserService) GetAdminByUsername(uname string) (models.User, error
 
 func (service *UserService) GetAdminByEmail(email string) (models.User, error) {
 	admin, err := service.repository.AdminEmail(email)
+	return admin, err
+}
+
+func (service *UserService) GetAdminByID(id uint) (models.User, error) {
+	admin, err := service.repository.AdminId(id)
 	return admin, err
 }
 

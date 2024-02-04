@@ -5,6 +5,7 @@ import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -93,6 +94,158 @@ func (uc *UserController) CreateAdmin(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
+	})
+}
+
+func (uc *UserController) FindUsername(c *gin.Context) {
+	req := new(dto.FindUsername)
+	err := c.ShouldBindJSON(&req)
+	//request validation
+	if err != nil {
+		validationErrs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusBadRequest, "Invalid request")
+			return
+		}
+		var errorMessage string
+		for _, e := range validationErrs {
+			errorMessage = fmt.Sprintf("error in field %s condition: %s", e.Field(), e.ActualTag())
+			break
+		}
+		c.JSON(http.StatusBadRequest, errorMessage)
+		return
+	}
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "id value not found",
+		})
+		return
+	}
+	//data query
+	data, err := uc.service.GetUserByUsername(req.Username)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "username not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "username found",
+		"data":    data,
+	})
+}
+
+func (uc *UserController) AdminID(c *gin.Context) {
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, "invalid Credentias")
+		return
+	}
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "invalid request")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "This page only for admin",
+		})
+		return
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	a, err := uc.service.GetAdminByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "user not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "user found",
+		"data":    a,
+	})
+}
+
+func (uc *UserController) FindID(c *gin.Context) {
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "token not found",
+		})
+		return
+	}
+	tokenTyp, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "TokenType value not set",
+		})
+		return
+	}
+
+	if tokenTyp.(string) != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "This page only for admin",
+		})
+		return
+	}
+	//parsing id from url parameter
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	u, err := uc.service.GetByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "user not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "user found",
+		"data":    u,
+	})
+}
+
+func (uc *UserController) GetUserByID(c *gin.Context) {
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "token not found",
+		})
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	u, err := uc.service.GetUserByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "user not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "user found",
+		"data":    u,
 	})
 }
 

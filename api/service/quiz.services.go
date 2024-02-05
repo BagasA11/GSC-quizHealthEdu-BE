@@ -20,6 +20,7 @@ func (qs *QuizService) CreateQuiz(req *dto.QuizCreate) error {
 	q := models.Quiz{
 		Title: req.Title,
 		Topic: req.Topic,
+		Desc:  req.Desc,
 	}
 	err := qs.repository.Create(q)
 	return err

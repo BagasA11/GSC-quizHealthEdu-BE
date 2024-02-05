@@ -175,6 +175,28 @@ func (uc *UserController) AdminID(c *gin.Context) {
 	})
 }
 
+func (uc *UserController) User(c *gin.Context) {
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"massage": "credentials not found",
+		})
+		return
+	}
+	u, err := uc.service.GetAllUser()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to get data",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "success",
+		"data":    u,
+	})
+}
+
+/*find specific user*/
 func (uc *UserController) FindID(c *gin.Context) {
 	//token validation
 	_, exist := c.Get("ID")
@@ -339,6 +361,41 @@ func (uc *UserController) UpdatePassword(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
+	})
+}
+
+func (uc *UserController) BlockUser(c *gin.Context) {
+	tTyp, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "token type not set",
+		})
+		return
+	}
+	if tTyp.(string) != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{
+			"massage": "User are forbidden to block user",
+		})
+		return
+	}
+	//get id from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	err = uc.service.BlockUser(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "user id not found",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user block successfuly",
 	})
 }
 

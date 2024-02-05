@@ -52,7 +52,7 @@ func (ac *AuthController) UserLogin(ctx *gin.Context) {
 	accessToken, err := ac.service.UserLogin(req)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"message": "login failed",
+			"message": "invalid credentials",
 			"error":   err,
 		})
 		return

@@ -16,10 +16,11 @@ func NewQuestionService() *QuestionService {
 	}
 }
 
-func (qst *QuestionService) Create(req *dto.Question) error {
+func (qst *QuestionService) Create(quizId uint, req *dto.Question) error {
 	q := models.Question{
 		Question: req.Question,
 		Answer:   req.Answer,
+		QuizID:   quizId,
 	}
 	err := qst.repository.Create(q)
 	return err

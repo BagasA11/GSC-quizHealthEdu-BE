@@ -12,7 +12,8 @@ type Quiz struct {
 	Title     string `gorm:"not null;unique"`
 	Topic     string `gorm:"not null"`
 	Img       *string
-	Free      bool `gorm:"type:boolean; not null; default:true"`
+	Desc      string `gorm:"not null"`
+	Free      bool   `gorm:"type:boolean; not null; default:true"`
 	Price     *uint64
 	Disc      uint8 `gorm:"type:integer; not null; default:0"`
 	CreatedAt time.Time

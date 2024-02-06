@@ -29,6 +29,7 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.PUT("/user/update-username", middleware.JwtAuth(), uc.UpdateUsername)
 	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
 	group.PUT("/user/block/:id", middleware.JwtAuth(), uc.BlockUser)
+	group.PUT("user/avatar", middleware.JwtAuth(), uc.UpdateAvatar)
 	//find user by user id
 	group.POST("user/:id", middleware.JwtAuth(), uc.GetUserByID)
 

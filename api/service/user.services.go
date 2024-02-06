@@ -132,6 +132,11 @@ func (service *UserService) SetBio(id uint, bio string) error {
 	return err
 }
 
+func (us *UserService) SetAvatar(id uint, file string) error {
+	err := us.repository.UploadAvatar(id, file)
+	return err
+}
+
 func (service *UserService) isPasswordMatch(id uint, input string) (bool, error) {
 	//SELECT * FROM users WHERE id = $id
 	user, err := service.repository.FindId(id)

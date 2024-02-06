@@ -3,8 +3,6 @@ package repository
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/models"
 	"BagasA11/GSC-quizHealthEdu-BE/configs"
-	"errors"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -114,9 +112,6 @@ func (ur *UserRepository) Updates(user models.User) error {
 func (ur *UserRepository) UploadAvatar(id uint, filename string) error {
 	//filename source is from form/client request
 	tx := ur.Db.Begin()
-	if !extCheck(filename) {
-		return errors.New("file name has not extention")
-	}
 	err := tx.Model(&models.User{}).Where("id = ?", id).Update("avatar", filename).Error
 	if err != nil {
 		tx.Rollback()
@@ -124,14 +119,6 @@ func (ur *UserRepository) UploadAvatar(id uint, filename string) error {
 	}
 	tx.Commit()
 	return nil
-}
-
-// check if the file source have extension like .jpg .pdf etc
-func extCheck(file string) bool {
-	if strings.Split(file, ".")[1] == "" {
-		return false
-	}
-	return true
 }
 
 func (ur *UserRepository) SetBio(id uint, bio string) error {

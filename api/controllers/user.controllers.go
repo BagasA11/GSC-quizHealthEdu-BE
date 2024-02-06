@@ -3,12 +3,16 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 type UserController struct {
@@ -322,6 +326,56 @@ func (uc *UserController) UpdateUsername(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "success",
 	})
+}
+
+func (uc *UserController) UpdateAvatar(c *gin.Context) {
+	//get id and token validation
+	id, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "id value not found",
+		})
+		return
+	}
+	filename, err := uc.uploadAvatar(id.(uint), c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload avatar",
+			"error":   err,
+		})
+		return
+	}
+	err = uc.service.SetAvatar(id.(uint), filename)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload avatar",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, "upload success")
+}
+
+func (uc *UserController) uploadAvatar(id uint, c *gin.Context) (string, error) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return "", err
+	}
+
+	ext := strings.Split(file.Filename, ".")[1]
+	if ext == "" {
+		return "", errors.New("file has not extension")
+	}
+	if !slices.Contains([]string{"jpg", "jpeg", "png", "svg"}, ext) {
+		return "", errors.New("file not image type")
+	}
+	var filename string = uuid.NewString() + "." + ext
+	err = c.SaveUploadedFile(file, fmt.Sprintf("/asset/img/user/%s", filename))
+	if err != nil {
+		return "", err
+	}
+	path := "/asset/img/user/" + filename
+	return path, nil
 }
 
 func (uc *UserController) UpdatePassword(c *gin.Context) {

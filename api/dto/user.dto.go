@@ -39,3 +39,7 @@ type DeleteUser struct {
 type FindUsername struct {
 	Username string `json:"username" binding:"required,min=8"`
 }
+
+type Avatar struct {
+	Filename string `json:"file" binding:"required,min=8"`
+}

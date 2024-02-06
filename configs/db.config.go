@@ -7,6 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// "fmt"
+// 	"os"
+
 // "BagasA11/GSC-quizHealthEdu-BE/api/models"
 
 //	"gorm.io/driver/mysql"
@@ -14,7 +17,18 @@ import (
 //
 // ""
 var dbClient *gorm.DB
-var Dsn = "root@tcp(127.0.0.1:3306)/gsc-quiz-healthedu?charset=utf8mb4&parseTime=True&loc=Local"
+
+// var Dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+//
+//	os.Getenv("MYSQL_USERNAME"),
+//	os.Getenv("MYSQL_PASSWORD"),
+//	os.Getenv("MYSQL_HOST"),
+//	os.Getenv("MYSQL_PORT"),
+//	os.Getenv("MYSQL_DATABASE"),
+//
+// )
+// "root":""@tcp("127.0.0.1":"3306")/"gsc-quiz-healthedu"?charset=utf8mb4&parseTime=True&loc=Local
+var Dsn = "root:@tcp(127.0.0.1:3306)/gsc-quiz-healthedu?charset=utf8mb4&parseTime=True&loc=Local"
 
 func InitDb() error {
 	var err error

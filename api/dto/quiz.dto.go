@@ -1,9 +1,10 @@
 package dto
 
 type QuizCreate struct {
-	Title string `json:"title" binding:"required"`
-	Topic string `json:"topic" binding:"required"`
-	Desc  string `json:"description" binding:"required"`
+	Title string  `json:"title" binding:"required"`
+	Topic string  `json:"topic" binding:"required"`
+	Desc  string  `json:"description" binding:"required"`
+	Img   *string `json:"img"`
 }
 
 type Question struct {

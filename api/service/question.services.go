@@ -36,8 +36,8 @@ func (qs *QuestionService) FindID(id uint) (models.Question, error) {
 	return q, err
 }
 
-func (qst *QuestionService) GetQuizAndOption(quizID uint, page uint) ([]models.Question, error) {
-	qs, err := qst.repository.GetQuestionAndOption(quizID, page)
+func (qst *QuestionService) GetQuizAndOption(quizID uint) ([]models.Question, error) {
+	qs, err := qst.repository.GetQuestionAndOption(quizID)
 	return qs, err
 }
 

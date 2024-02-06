@@ -21,6 +21,7 @@ func (qs *QuizService) CreateQuiz(req *dto.QuizCreate) error {
 		Title: req.Title,
 		Topic: req.Topic,
 		Desc:  req.Desc,
+		Img:   req.Img,
 	}
 	err := qs.repository.Create(q)
 	return err
@@ -63,6 +64,11 @@ func (qs *QuizService) Update(id uint, req *dto.QuizCreate) error {
 		Topic: req.Topic,
 	}
 	err := qs.repository.Update(q)
+	return err
+}
+
+func (qs *QuizService) UploadImgCover(id uint, file string) error {
+	err := qs.repository.UploadImageCover(id, file)
 	return err
 }
 

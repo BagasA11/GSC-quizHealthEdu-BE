@@ -31,7 +31,7 @@ func (qr *QuizRepository) Create(quiz models.Quiz) error {
 
 func (qr *QuizRepository) All() ([]models.Quiz, error) {
 	var quizzes []models.Quiz
-	err := qr.Db.Find(&quizzes).Error
+	err := qr.Db.Select([]string{"id", "title", "topic", "desc", "free"}).Find(&quizzes).Error
 	return quizzes, err
 }
 
@@ -44,26 +44,26 @@ func (qr *QuizRepository) FindID(id uint) (models.Quiz, error) {
 func (qr *QuizRepository) Free() ([]models.Quiz, error) {
 	var freeQuizzes []models.Quiz
 	//SELECT * FROM quizzes WHERE free = true
-	err := qr.Db.Where("free = ?", true).Find(&freeQuizzes).Error
+	err := qr.Db.Where("free = ?", true).Select([]string{"id", "title", "desc"}).Find(&freeQuizzes).Error
 	return freeQuizzes, err
 }
 
 func (qr *QuizRepository) Cheapest() ([]models.Quiz, error) {
 	var cheapQuizzes []models.Quiz
 	//SELECT * FROM quizzess ORDER BY price ASC
-	err := qr.Db.Find(&cheapQuizzes).Order("price ASC").Error
+	err := qr.Db.Select([]string{"id", "title", "topic", "desc", "price"}).Find(&cheapQuizzes).Order("price ASC").Error
 	return cheapQuizzes, err
 }
 
 func (qr *QuizRepository) FindTitle(title string) ([]models.Quiz, error) {
 	var quiz []models.Quiz
-	err := qr.Db.Where("title = ?", "%"+title+"%").Find(&quiz).Error
+	err := qr.Db.Where("title = ?", "%"+title+"%").Select("id", "title", "desc", "free").Find(&quiz).Error
 	return quiz, err
 }
 
 func (qr *QuizRepository) FindTopic(topic string) ([]models.Quiz, error) {
 	var quiz []models.Quiz
-	err := qr.Db.Where("topic = ?", "%"+topic+"%").Find(&quiz).Error
+	err := qr.Db.Where("topic = ?", "%"+topic+"%").Select([]string{"id", "topic", "desc", "free"}).Find(&quiz).Error
 	return quiz, err
 }
 
@@ -71,6 +71,17 @@ func (qr *QuizRepository) Update(quiz models.Quiz) error {
 	tx := qr.Db.Begin()
 	//UPDATE quizzes SET VALUE({quiz}) WHERE id = {quiz->id}
 	err := tx.Model(&models.Quiz{}).Where("id = ?", quiz.ID).Updates(&quiz).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
+}
+
+func (qr *QuizRepository) UploadImageCover(id uint, file string) error {
+	tx := qr.Db.Begin()
+	err := tx.Model(&models.Quiz{}).Where("id = ?", id).Update("img", file).Error
 	if err != nil {
 		tx.Rollback()
 		return err

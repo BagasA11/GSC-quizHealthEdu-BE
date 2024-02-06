@@ -51,11 +51,6 @@ func (service *UserService) GetAllUser() ([]models.User, error) {
 	return user, err
 }
 
-func (service *UserService) GetByID(id uint) (models.User, error) {
-	user, err := service.repository.FindId(id)
-	return user, err
-}
-
 func (service *UserService) GetUserByID(id uint) (models.User, error) {
 	user, err := service.repository.FindUserId(id)
 	return user, err

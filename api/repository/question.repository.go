@@ -41,13 +41,10 @@ func (qr *QuestionRepository) FindID(id uint) (models.Question, error) {
 	return q, err
 }
 
-func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint, page uint) ([]models.Question, error) {
-	//page_id from request url
+func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint) ([]models.Question, error) {
+
 	var quest []models.Question
-	//offset = skip data
-	//limit = limit return data
-	//return data pagination
-	err := qstRepo.Db.Limit(1).Offset(int(page)-1).Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
+	err := qstRepo.Db.Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
 
 	return quest, err
 }

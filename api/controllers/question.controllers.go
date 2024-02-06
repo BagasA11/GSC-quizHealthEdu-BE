@@ -116,14 +116,8 @@ func (qc *QuestionController) GetQuestionAndOption(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "quiz id on url not found")
 		return
 	}
-	// get page from url
-	// url/1?page=1
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, "page field not set")
-		return
-	}
-	q, err := qc.service.GetQuizAndOption(uint(quizID), uint(page))
+
+	q, err := qc.service.GetQuizAndOption(uint(quizID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"massage": "invalid request",

@@ -5,12 +5,16 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 type QuizController struct {
@@ -24,8 +28,31 @@ func NewQuizController() *QuizController {
 }
 
 func (qc *QuizController) Create(c *gin.Context) {
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusUnauthorized, "you are not allowed to modificate quiz entity")
+		return
+	}
+	//upload image from form file type
+	filePath, err := upload(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload quiz image",
+			"error":   err,
+		})
+		return
+	}
+
+	//bind all data from request
 	req := new(dto.QuizCreate)
-	err := c.ShouldBindJSON(&req)
+	req.Img = &filePath
+	err = c.ShouldBindJSON(&req)
+	//request validation
+	//request validation
 	if err != nil {
 		validationErrs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -40,36 +67,15 @@ func (qc *QuizController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorMessage)
 		return
 	}
-	_, exist := c.Get("ID")
-	if !exist {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Token id not found",
-		})
-		return
-	}
-	tokenTyp, exist := c.Get("TokenType")
-	if !exist {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "TokenType value not set",
-		})
-		return
-	}
-	if tokenTyp.(string) != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{
-			"message": "User are not allowed to create Quiz",
-		})
-		return
-	}
 	err = qc.service.CreateQuiz(req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "failed to create Quiz",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "failed to create data",
+			"error":   err,
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "success",
-	})
+	c.JSON(http.StatusOK, "success create data")
 }
 
 func (qc *QuizController) FindCheapest(c *gin.Context) {
@@ -83,6 +89,20 @@ func (qc *QuizController) FindCheapest(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"massage": "ok",
 		"data":    data,
+	})
+}
+
+func (qc *QuizController) All(c *gin.Context) {
+	q, err := qc.service.All()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "failed to get data",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "ok",
+		"data":    q,
 	})
 }
 
@@ -216,6 +236,73 @@ func (qc *QuizController) Edit(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"massage": "success",
 	})
+}
+
+func (qc *QuizController) UploadImgCover(c *gin.Context) {
+	//token validation
+	tokenType, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type not set")
+		return
+	}
+	if tokenType.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "user are not allowed to upload quiz image")
+		return
+	}
+
+	//get id from url
+	// url/quiz/upload/:id
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	//upload image from form file type
+	filePath, err := upload(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload quiz image",
+			"error":   err,
+		})
+		return
+	}
+
+	//save file path to database
+	err = qc.service.UploadImgCover(uint(id), filePath)
+	//error validation
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload quiz image",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, "upload success")
+}
+
+func upload(c *gin.Context) (string, error) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return "", err
+	}
+	//extension validation
+	ext := strings.Split(file.Filename, ".")[1]
+	if ext == "" {
+		return "", errors.New("file has not extension")
+	}
+	if !slices.Contains([]string{"jpg", "jpeg", "png", "svg"}, ext) {
+		return "", errors.New("file not image type")
+	}
+	var filename string = uuid.NewString() + "." + ext
+	err = c.SaveUploadedFile(file, fmt.Sprintf("/asset/img/question/%s", filename))
+	if err != nil {
+		return "", err
+	}
+	path := "/asset/img/question/" + filename
+	return path, nil
 }
 
 func (qc *QuizController) Delete(c *gin.Context) {

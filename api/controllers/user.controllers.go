@@ -179,7 +179,7 @@ func (uc *UserController) AdminID(c *gin.Context) {
 	})
 }
 
-func (uc *UserController) User(c *gin.Context) {
+func (uc *UserController) AllUser(c *gin.Context) {
 	_, exist := c.Get("ID")
 	if !exist {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -196,51 +196,6 @@ func (uc *UserController) User(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"massage": "success",
-		"data":    u,
-	})
-}
-
-/*find specific user*/
-func (uc *UserController) FindID(c *gin.Context) {
-	//token validation
-	_, exist := c.Get("ID")
-	if !exist {
-		c.JSON(http.StatusForbidden, gin.H{
-			"message": "token not found",
-		})
-		return
-	}
-	tokenTyp, exist := c.Get("TokenType")
-	if !exist {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "TokenType value not set",
-		})
-		return
-	}
-
-	if tokenTyp.(string) != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{
-			"message": "This page only for admin",
-		})
-		return
-	}
-	//parsing id from url parameter
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
-		})
-		return
-	}
-	u, err := uc.service.GetByID(uint(id))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"massage": "user not found",
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"massage": "user found",
 		"data":    u,
 	})
 }

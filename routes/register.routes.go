@@ -13,5 +13,7 @@ func RegisterRoutes(r *gin.Engine) {
 	UserRoutes(apiGroup)
 	//endpoint to handle quiz
 	QuizRoutes(apiGroup)
+	QuestionRoutes(apiGroup)
+	OptionRoutes(apiGroup)
 	r.Run(":" + os.Getenv("HOST_PORT"))
 }

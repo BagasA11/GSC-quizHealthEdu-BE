@@ -41,7 +41,7 @@ func (as *AuthService) UserLogin(req *dto.UserLogin) (string, error) {
 
 func (as *AuthService) AdmiLogin(req *dto.AdminLogin) (string, error) {
 	var user models.User
-	err := as.db.Where("username = ?", req.Username).First(&user).Error
+	err := as.db.Where("username = ? AND admin = ?", req.Username, true).First(&user).Error
 	if err != nil {
 		return "", err
 	}

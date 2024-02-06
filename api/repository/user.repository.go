@@ -50,7 +50,7 @@ func (ur *UserRepository) FindUserId(id uint) (models.User, error) {
 func (ur *UserRepository) AllUser() ([]models.User, error) {
 	var users []models.User
 	//SELECT * FROM users WHERE admin = false AND block = false
-	err := ur.Db.Where("admin = ? AND block = ?", false, false).Find(&users).Error
+	err := ur.Db.Where("admin = ? AND block = ?", false, false).Select([]string{"id", "email", "username"}).Find(&users).Error
 	return users, err
 }
 

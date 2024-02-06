@@ -24,13 +24,18 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.POST("/user/login", ac.UserLogin)
 	// login page for admin
 	group.POST("/user/admin/login", ac.AdmiLogin)
+
+	group.POST("/user/username", middleware.JwtAuth(), uc.FindUsername)
+	group.GET("/user/admin/:id", middleware.JwtAuth(), uc.AdminID)
+	group.GET("/user", middleware.JwtAuth(), uc.AllUser)
+	group.GET("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
 	// update password
 	group.PUT("/user/password", middleware.JwtAuth(), uc.UpdatePassword)
 	group.PUT("/user/update-username", middleware.JwtAuth(), uc.UpdateUsername)
 	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
 	group.PUT("/user/block/:id", middleware.JwtAuth(), uc.BlockUser)
-	group.PUT("user/avatar", middleware.JwtAuth(), uc.UpdateAvatar)
+	group.PUT("/user/avatar", middleware.JwtAuth(), uc.UpdateAvatar)
 	//find user by user id
-	group.POST("user/:id", middleware.JwtAuth(), uc.GetUserByID)
+	group.POST("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
 
 }

@@ -86,6 +86,11 @@ func (service *UserService) GetAdminByID(id uint) (models.User, error) {
 	return admin, err
 }
 
+func (us *UserService) FindId(id uint) (models.User, error) {
+	user, err := us.repository.FindId(id)
+	return user, err
+}
+
 func (service *UserService) BlockUser(id uint) error {
 	err := service.repository.BlockUser(id)
 	return err

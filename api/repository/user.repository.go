@@ -72,7 +72,7 @@ func (ur *UserRepository) FindEmail(email string) (models.User, error) {
 func (ur *UserRepository) AllAdmin() ([]models.User, error) {
 	var admins []models.User
 	//SELECT * FROM users WHERE admin = false AND block = false
-	err := ur.Db.Where("admin = ?", true).Find(&admins).Error
+	err := ur.Db.Where("admin = ?", true).Select([]string{"id", "username", "email"}).Find(&admins).Error
 	return admins, err
 }
 

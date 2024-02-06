@@ -24,18 +24,27 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.POST("/user/login", ac.UserLogin)
 	// login page for admin
 	group.POST("/user/admin/login", ac.AdmiLogin)
-
+	//find user by username
 	group.POST("/user/username", middleware.JwtAuth(), uc.FindUsername)
+	//find admin by username
+	group.POST("/user/admin/username", middleware.JwtAuth(), uc.FindAdminbyUsername)
+	//get user by id
+	group.GET("/user/all", middleware.JwtAuth(), uc.AllUser)
+	//get admin by id
 	group.GET("/user/admin/:id", middleware.JwtAuth(), uc.AdminID)
+	//get all user data
 	group.GET("/user", middleware.JwtAuth(), uc.AllUser)
-	group.GET("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
+	//get all type user profile
+	group.GET("/user/:id", middleware.JwtAuth(), uc.Me)
 	// update password
 	group.PUT("/user/password", middleware.JwtAuth(), uc.UpdatePassword)
+	//update username ... admin is not allowed to update username
 	group.PUT("/user/update-username", middleware.JwtAuth(), uc.UpdateUsername)
-	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
+	//block user ... admin cannot be blocked
 	group.PUT("/user/block/:id", middleware.JwtAuth(), uc.BlockUser)
+	//upload avatar image
 	group.PUT("/user/avatar", middleware.JwtAuth(), uc.UpdateAvatar)
-	//find user by user id
-	group.POST("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
+	//delete user
+	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
 
 }

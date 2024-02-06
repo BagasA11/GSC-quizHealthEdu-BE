@@ -141,6 +141,61 @@ func (uc *UserController) FindUsername(c *gin.Context) {
 	})
 }
 
+func (uc *UserController) FindAdminbyUsername(c *gin.Context) {
+	//token validation
+	//id checking
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, "invalid Credentias")
+		return
+	}
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "invalid request")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "This page only for admin",
+		})
+		return
+	}
+
+	//bind data from request
+	req := new(dto.FindUsername)
+	err := c.ShouldBindJSON(&req)
+	//request validation
+	if err != nil {
+		validationErrs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusBadRequest, "Invalid request")
+			return
+		}
+		var errorMessage string
+		for _, e := range validationErrs {
+			errorMessage = fmt.Sprintf("error in field %s condition: %s", e.Field(), e.ActualTag())
+			break
+		}
+		c.JSON(http.StatusBadRequest, errorMessage)
+		return
+	}
+
+	//send request data to service
+	u, err := uc.service.GetAdminByUsername(req.Username)
+	//error validation
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "username not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "username found",
+		"data":    u,
+	})
+
+}
+
 func (uc *UserController) AdminID(c *gin.Context) {
 	//token validation
 	_, exist := c.Get("ID")
@@ -226,6 +281,31 @@ func (uc *UserController) GetUserByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"massage": "user found",
+		"data":    u,
+	})
+}
+
+func (uc *UserController) Me(c *gin.Context) {
+	//token validation
+	//get id from token
+	ID, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"massage": "credentials not found",
+		})
+		return
+	}
+	u, err := uc.service.FindId(ID.(uint))
+	//error validation
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "not found",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "success",
 		"data":    u,
 	})
 }

@@ -35,14 +35,12 @@ func (qstRepo *QuestionRepository) ReferToQuiz(quizId uint) ([]models.Question, 
 	return quest, err
 }
 
-/*
-	func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint) ([]models.Question, error) {
-		//page_id from request url
-		var quest []models.Question
-		err := qstRepo.Db.Where("quiz_id = ?", quizID).Preload("Option").Find(&quest).Error
-		return quest, err
-	}
-*/
+func (qr *QuestionRepository) FindID(id uint) (models.Question, error) {
+	var q models.Question
+	err := qr.Db.Where("id = ?", id).Preload("Option").First(&q).Error
+	return q, err
+}
+
 func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint, page uint) ([]models.Question, error) {
 	//page_id from request url
 	var quest []models.Question

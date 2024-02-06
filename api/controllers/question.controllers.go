@@ -73,6 +73,69 @@ func (qc *QuestionController) Create(c *gin.Context) {
 	})
 }
 
+func (qc *QuestionController) FindID(c *gin.Context) {
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token not found")
+		return
+	}
+	//retrieve id from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	q, err := qc.service.FindID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massages": "question id not found",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "question was found",
+		"data":    q,
+	})
+}
+
+func (qc *QuestionController) GetQuestionAndOption(c *gin.Context) {
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "token not available",
+		})
+		return
+	}
+	//retrieve id from url
+	// url/quizid
+	quizID, err := strconv.Atoi(c.Param("quizid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "quiz id on url not found")
+		return
+	}
+	// get page from url
+	// url/1?page=1
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "page field not set")
+		return
+	}
+	q, err := qc.service.GetQuizAndOption(uint(quizID), uint(page))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "invalid request",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": q,
+	})
+}
+
 func (qc *QuestionController) Edit(c *gin.Context) {
 	tkType, exist := c.Get("TokenType")
 	if !exist {
@@ -123,4 +186,38 @@ func (qc *QuestionController) Edit(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
 	})
+}
+
+func (qc *QuestionController) Delete(c *gin.Context) {
+	//token validation
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "token not found",
+		})
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "user not allowed to delete question")
+		return
+	}
+	//get id from url
+	//url/question/id
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "invalid request",
+			"error":   err,
+		})
+		return
+	}
+	//serving delete behavior
+	err = qc.service.Delete(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, "delete question success")
 }

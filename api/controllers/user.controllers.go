@@ -337,7 +337,7 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 		})
 		return
 	}
-	filename, err := uc.uploadAvatar(id.(uint), c)
+	filename, err := uploadAvatar(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"massage": "failed to upload avatar",
@@ -356,7 +356,8 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 	c.JSON(http.StatusOK, "upload success")
 }
 
-func (uc *UserController) uploadAvatar(id uint, c *gin.Context) (string, error) {
+/*return path of image and nil error if success, else: return empty string and error*/
+func uploadAvatar(c *gin.Context) (string, error) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return "", err

@@ -31,6 +31,11 @@ func (qst *QuestionService) ReferToQuiz(quizID uint) ([]models.Question, error) 
 	return q, err
 }
 
+func (qs *QuestionService) FindID(id uint) (models.Question, error) {
+	q, err := qs.repository.FindID(id)
+	return q, err
+}
+
 func (qst *QuestionService) GetQuizAndOption(quizID uint, page uint) ([]models.Question, error) {
 	qs, err := qst.repository.GetQuestionAndOption(quizID, page)
 	return qs, err

@@ -20,7 +20,7 @@ func (ops *OptionService) Create(req *dto.Option) error {
 	o := models.Option{
 		Alphabet: req.Alphabet,
 		Text:     req.Txt,
-		Color:    req.Color,
+		Color:    *req.Color,
 	}
 	err := ops.repository.Create(o)
 	return err
@@ -36,7 +36,7 @@ func (ops *OptionService) Edit(id uint, req *dto.Option) error {
 		ID:       id,
 		Alphabet: req.Alphabet,
 		Text:     req.Txt,
-		Color:    req.Color,
+		Color:    *req.Color,
 	}
 	err := ops.repository.Edit(o)
 	return err

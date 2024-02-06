@@ -12,9 +12,9 @@ type Question struct {
 }
 
 type Option struct {
-	Alphabet string `json:"options" binding:"required,max=1"`
-	Txt      string `json:"desc" binding:"required"`
-	Color    string `json:"color" binding:"required"`
+	Alphabet string  `json:"options" binding:"required,max=1"`
+	Txt      string  `json:"desc" binding:"required"`
+	Color    *string `json:"color" binding:"required"`
 }
 
 type FindTopic struct {

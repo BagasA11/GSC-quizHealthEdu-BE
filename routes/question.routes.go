@@ -13,7 +13,7 @@ func QuestionRoutes(group *gin.RouterGroup) {
 	group.GET("/question/:id", middleware.JwtAuth(), qc.FindID)
 	group.GET("/question/:quizid?page", middleware.JwtAuth(), qc.GetQuestionAndOption)
 	//create new quiz
-	group.POST("/question/:quizid/create", middleware.JwtAuth(), qc.Create)
+	group.POST("/question/create/:quizid", middleware.JwtAuth(), qc.Create)
 	group.PUT("/question/update/:id", middleware.JwtAuth(), qc.Edit)
 	group.DELETE("/question/delete/:id", middleware.JwtAuth(), qc.Delete)
 }

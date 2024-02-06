@@ -16,11 +16,12 @@ func NewOptionService() *OptionService {
 	}
 }
 
-func (ops *OptionService) Create(req *dto.Option) error {
+func (ops *OptionService) Create(questId uint, req *dto.Option) error {
 	o := models.Option{
-		Alphabet: req.Alphabet,
-		Text:     req.Txt,
-		Color:    *req.Color,
+		Alphabet:   req.Alphabet,
+		Text:       req.Txt,
+		Color:      *req.Color,
+		QuestionID: questId,
 	}
 	err := ops.repository.Create(o)
 	return err

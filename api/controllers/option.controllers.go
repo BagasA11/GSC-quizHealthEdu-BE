@@ -38,9 +38,18 @@ func (oc *OptionController) Create(c *gin.Context) {
 		c.JSON(http.StatusForbidden, "User are not allowed to create Option")
 		return
 	}
+	//get id from url
 
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	//bind data from request
 	req := new(dto.Option)
-	err := c.ShouldBindJSON(&req)
+	err = c.ShouldBindJSON(&req)
 	if err != nil {
 		validationErrs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -55,7 +64,7 @@ func (oc *OptionController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorMessage)
 		return
 	}
-	err = oc.service.Create(req)
+	err = oc.service.Create(uint(id), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "failed to create Option",
@@ -82,7 +91,7 @@ func (oc *OptionController) Edit(c *gin.Context) {
 		return
 	}
 	if typ.(string) != "admin" {
-		c.JSON(http.StatusForbidden, "User are not allowed to create Option")
+		c.JSON(http.StatusForbidden, "User are not allowed to edit Option")
 		return
 	}
 
@@ -117,6 +126,45 @@ func (oc *OptionController) Edit(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "failed to Update Option",
+			"err":     err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
+}
+
+func (oc *OptionController) Delete(c *gin.Context) {
+	//token validation
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token id not set")
+		return
+	}
+
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "User are not allowed to create Option")
+		return
+	}
+	//get id from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	//serving to delete option
+	err = oc.service.Delete(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "failed to Delete Option",
 			"err":     err,
 		})
 		return

@@ -37,21 +37,17 @@ func (qc *QuizController) Create(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, "you are not allowed to modificate quiz entity")
 		return
 	}
+	//initial request data
+	req := new(dto.QuizCreate)
+
 	//upload image from form file type
 	filePath, err := upload(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"massage": "failed to upload quiz image",
-			"error":   err,
-		})
-		return
+	//if upload img success ... make assignment filepath to img field
+	if err == nil {
+		req.Img = &filePath
 	}
-
-	//bind all data from request
-	req := new(dto.QuizCreate)
-	req.Img = &filePath
+	//bind data from request
 	err = c.ShouldBindJSON(&req)
-	//request validation
 	//request validation
 	if err != nil {
 		validationErrs, ok := err.(validator.ValidationErrors)
@@ -67,6 +63,7 @@ func (qc *QuizController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorMessage)
 		return
 	}
+
 	err = qc.service.CreateQuiz(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

@@ -48,6 +48,7 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "failed to create user",
+			"error":   err,
 		})
 		return
 	}
@@ -94,6 +95,7 @@ func (uc *UserController) CreateAdmin(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "failed to create admin",
+			"error":   err,
 		})
 		return
 	}

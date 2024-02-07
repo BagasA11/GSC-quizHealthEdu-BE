@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -16,15 +15,15 @@ import (
 // "gorm.io/gorm"
 type User struct {
 	gorm.Model
-	ID          uint   `gorm:"primaryKey"`
-	Username    string `gorm:"not null;unique;size:100"`
-	Email       string `gorm:"not null;unique;size:100"`
-	Block       bool   `gorm:"type:boolean; not null; default:false"`
-	Wallet      uint64 `gorm:"type:integer; not null; default:0"`
-	Password    string `gorm:"not null"`
-	Bio         *string
-	Avatar      *string
-	Admin       bool `gorm:"type:boolean; not null; default:false"`
+	ID          uint    `gorm:"primaryKey"`
+	Username    string  `gorm:"not null;unique;size:50"`
+	Email       string  `gorm:"not null;unique;size:50"`
+	Block       bool    `gorm:"type:boolean; not null; default:false"`
+	Wallet      uint64  `gorm:"type:integer; not null; default:0"`
+	Password    string  `gorm:"not null"`
+	Bio         *string `gorm:"size:300"`
+	Avatar      *string `gorm:"size:110"`
+	Admin       bool    `gorm:"type:boolean; not null; default:false"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   uint `gorm:"type:integer; default:null"`
@@ -39,9 +38,6 @@ type User struct {
 // return error if occur
 func (user *User) BeforeCreate(tx *gorm.DB) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if user.Admin {
-		user.Username = user.adminID()
-	}
 
 	if err != nil {
 		return err
@@ -53,8 +49,4 @@ func (user *User) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("CreatedAt", time.Now())
 	tx.Statement.SetColumn("UpdatedAt", time.Now())
 	return nil
-}
-
-func (*User) adminID() string {
-	return uuid.NewString()
 }

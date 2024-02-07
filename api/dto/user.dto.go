@@ -7,6 +7,7 @@ type AdminLogin struct {
 
 type AdminCreate struct {
 	Email      string `json:"email" binding:"required,min=5"`
+	Username   string `json:"username" binding:"required"`
 	Password   string `json:"password" binding:"required,min=8"`
 	C_password string `json:"c-password" binding:"required,min=8"`
 }

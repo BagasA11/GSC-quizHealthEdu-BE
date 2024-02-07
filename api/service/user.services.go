@@ -38,6 +38,7 @@ func (service *UserService) CreateAdmin(req *dto.AdminCreate) error {
 		return errors.New("password & password confirmation not match")
 	}
 	adm := models.User{
+		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,
 		Admin:    true,

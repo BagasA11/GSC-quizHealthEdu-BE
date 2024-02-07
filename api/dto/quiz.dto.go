@@ -1,10 +1,12 @@
 package dto
 
+import "mime/multipart"
+
 type QuizCreate struct {
-	Title string  `json:"title" binding:"required"`
-	Topic string  `json:"topic" binding:"required"`
-	Desc  string  `json:"description" binding:"required"`
-	Img   *string `json:"img"`
+	Title string                `form:"title"`
+	Topic string                `form:"topic"`
+	Desc  string                `form:"desc"`
+	Img   *multipart.FileHeader `form:"file"`
 }
 
 type Question struct {

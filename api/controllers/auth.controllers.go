@@ -36,7 +36,10 @@ func (ac *AuthController) UserLogin(ctx *gin.Context) {
 	if err != nil {
 		validationErrs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			ctx.JSON(http.StatusBadRequest, "Invalid request")
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"massage": "Invalid request",
+				"error":   err,
+			})
 			return
 		}
 		var errorMessage string
@@ -65,5 +68,40 @@ func (ac *AuthController) UserLogin(ctx *gin.Context) {
 }
 
 func (ac *AuthController) AdmiLogin(c *gin.Context) {
+	//bind data from request
+	req := new(dto.AdminLogin)
+	err := c.ShouldBindJSON(&req)
+	//error validation
+	if err != nil {
+		validationErrs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"massage": "Invalid request",
+				"error":   err,
+			})
+			return
+		}
+		var errorMessage string
+		for _, e := range validationErrs {
+			errorMessage = fmt.Sprintf("error in field %s condition: %s", e.Field(), e.ActualTag())
+			break
+		}
+		c.JSON(http.StatusBadRequest, errorMessage)
+		return
+	}
 
+	//attempt login request to User login service
+	//get access token
+	accessToken, err := ac.service.AdmiLogin(req)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "invalid credentials",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "login success",
+		"token":   accessToken,
+	})
 }

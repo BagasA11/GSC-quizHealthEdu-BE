@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJhZG1pbnN1cHJlbWUiLCJ0b2tlblR5cGUiOiJhZG1pbiIsImV4cCI6MTcwNzM1ODUzN30.wGALX99kAvop1bWZTOpmiE6NKfRja8UjWXpZyNcTDpo
 func UserRoutes(group *gin.RouterGroup) {
 	uc := controllers.NewUserController()
 	ac := controllers.NewAuthController()

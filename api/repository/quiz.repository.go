@@ -31,7 +31,7 @@ func (qr *QuizRepository) Create(quiz models.Quiz) error {
 
 func (qr *QuizRepository) All() ([]models.Quiz, error) {
 	var quizzes []models.Quiz
-	err := qr.Db.Select([]string{"id", "title", "topic", "desc", "free"}).Find(&quizzes).Error
+	err := qr.Db.Select([]string{"id", "title", "topic", "desc", "free"}).Order("created_at DESC").Find(&quizzes).Error
 	return quizzes, err
 }
 
@@ -44,13 +44,13 @@ func (qr *QuizRepository) FindID(id uint) (models.Quiz, error) {
 func (qr *QuizRepository) Free() ([]models.Quiz, error) {
 	var freeQuizzes []models.Quiz
 	//SELECT * FROM quizzes WHERE free = true
-	err := qr.Db.Where("free = ?", true).Select([]string{"id", "title", "desc"}).Find(&freeQuizzes).Error
+	err := qr.Db.Where("free = ?", true).Select([]string{"id", "title", "desc", "free"}).Find(&freeQuizzes).Error
 	return freeQuizzes, err
 }
 
 func (qr *QuizRepository) Cheapest() ([]models.Quiz, error) {
 	var cheapQuizzes []models.Quiz
-	//SELECT * FROM quizzess ORDER BY price ASC
+	//SELECT "id", "title", "topic", "desc", "price" FROM quizzess ORDER BY price ASC
 	err := qr.Db.Select([]string{"id", "title", "topic", "desc", "price"}).Find(&cheapQuizzes).Order("price ASC").Error
 	return cheapQuizzes, err
 }

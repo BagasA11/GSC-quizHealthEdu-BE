@@ -10,7 +10,7 @@ type Quiz struct {
 	gorm.Model
 	ID        uint   `gorm:"primaryKey"`
 	Title     string `gorm:"not null;unique"`
-	Topic     string `gorm:"not null"`
+	Topic     string `gorm:"not null; size:50"`
 	Img       *string
 	Desc      string `gorm:"not null"`
 	Free      bool   `gorm:"type:boolean; not null; default:true"`

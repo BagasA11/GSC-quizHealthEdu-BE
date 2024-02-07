@@ -32,6 +32,20 @@ func (ur *UserRepository) CreateUser(user models.User) error {
 	return err
 }
 
+func (ur *UserRepository) CheckAvatar(id uint) (string, bool) {
+	var u models.User
+	//get a string from avatar column
+	err := ur.Db.Select("avatar").Where("id = ?", id).Find(&u).Error
+	if err != nil {
+		return "", false
+	}
+	//avatar column validation
+	if *u.Avatar == "" {
+		return "", false
+	}
+	return *u.Avatar, true
+}
+
 func (ur *UserRepository) FindId(id uint) (models.User, error) {
 	var user models.User
 	//SELECT * FROM users WHERE id = {id} AND admin = false

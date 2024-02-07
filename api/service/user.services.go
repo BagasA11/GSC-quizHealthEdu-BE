@@ -71,6 +71,11 @@ func (service *UserService) GetAllAdmin() ([]models.User, error) {
 	return admin, err
 }
 
+func (us *UserService) CheckAvatar(id uint) (string, bool) {
+	file, err := us.repository.CheckAvatar(id)
+	return file, err
+}
+
 func (service *UserService) GetAdminByUsername(uname string) (models.User, error) {
 	admin, err := service.repository.AdminUsername(uname)
 	return admin, err

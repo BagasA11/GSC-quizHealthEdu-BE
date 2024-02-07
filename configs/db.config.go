@@ -10,8 +10,6 @@ import (
 // "fmt"
 // 	"os"
 
-// "BagasA11/GSC-quizHealthEdu-BE/api/models"
-
 //	"gorm.io/driver/mysql"
 //	"gorm.io/gorm"
 //

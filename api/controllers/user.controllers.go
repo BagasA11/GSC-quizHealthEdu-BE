@@ -3,6 +3,7 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"BagasA11/GSC-quizHealthEdu-BE/helpers"
 	"errors"
 	"fmt"
 	"net/http"
@@ -372,7 +373,8 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 		})
 		return
 	}
-	filename, err := uploadAvatar(c)
+	oldFile, exist := uc.service.CheckAvatar(id.(uint))
+	filename, err := uploadAvatar(c, oldFile, exist)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"massage": "failed to upload avatar",
@@ -392,12 +394,12 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 }
 
 /*return path of image and nil error if success, else: return empty string and error*/
-func uploadAvatar(c *gin.Context) (string, error) {
+func uploadAvatar(c *gin.Context, old string, exist bool) (string, error) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return "", err
 	}
-
+	//file validation
 	ext := strings.Split(file.Filename, ".")[1]
 	if ext == "" {
 		return "", errors.New("file has not extension")
@@ -405,8 +407,17 @@ func uploadAvatar(c *gin.Context) (string, error) {
 	if !slices.Contains([]string{"jpg", "jpeg", "png", "svg"}, ext) {
 		return "", errors.New("file not image type")
 	}
-	var filename string = uuid.NewString() + "." + ext
-	err = c.SaveUploadedFile(file, fmt.Sprintf("/asset/img/user/%s", filename))
+
+	filename := uuid.New().String() + "." + ext //img.jpg
+
+	//if file exist ... img in dir will deleted
+	if exist {
+		err := helpers.RemoveFile(old, "user")
+		if err != nil {
+			return "", err
+		}
+	}
+	err = c.SaveUploadedFile(file, fmt.Sprintf("asset/img/user/%s", filename))
 	if err != nil {
 		return "", err
 	}

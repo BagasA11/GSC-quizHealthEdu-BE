@@ -25,8 +25,8 @@ type User struct {
 	Bio         *string
 	Avatar      *string
 	Admin       bool `gorm:"type:boolean; not null; default:false"`
-	CreatedAt   uint `gorm:"type:integer; not null"`
-	UpdatedAt   uint `gorm:"type:integer; not null"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	DeletedAt   uint `gorm:"type:integer; default:null"`
 	Score       []Score
 	TopUp       []TopUp
@@ -50,8 +50,8 @@ func (user *User) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("Password", hash)
 
 	// generate time
-	tx.Statement.SetColumn("CreatedAt", time.Now().Unix())
-	tx.Statement.SetColumn("UpdatedAt", time.Now().Unix())
+	tx.Statement.SetColumn("CreatedAt", time.Now())
+	tx.Statement.SetColumn("UpdatedAt", time.Now())
 	return nil
 }
 

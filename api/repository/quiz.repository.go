@@ -67,7 +67,7 @@ func (qr *QuizRepository) FindTopic(topic string) ([]models.Quiz, error) {
 	return quiz, err
 }
 
-func (qr *QuizRepository) ToVerify() ([]models.Quiz, error) {
+func (qr *QuizRepository) NotVerified() ([]models.Quiz, error) {
 	var quiz []models.Quiz
 	err := qr.Db.Where("verified = ?", false).Find(&quiz).Error
 	return quiz, err

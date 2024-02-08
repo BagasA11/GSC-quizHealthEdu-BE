@@ -57,8 +57,8 @@ func (qs *QuizService) FindTopic(topic string) ([]models.Quiz, error) {
 	return q, err
 }
 
-func (qs *QuizService) ToVerify() ([]models.Quiz, error) {
-	q, err := qs.repository.ToVerify()
+func (qs *QuizService) NotVerified() ([]models.Quiz, error) {
+	q, err := qs.repository.NotVerified()
 	return q, err
 }
 

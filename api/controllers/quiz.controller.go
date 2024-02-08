@@ -112,7 +112,7 @@ func (qc *QuizController) All(c *gin.Context) {
 	})
 }
 
-func (qc *QuizController) ToVerify(c *gin.Context) {
+func (qc *QuizController) NotVerified(c *gin.Context) {
 	//token validation
 	typ, exist := c.Get("TokenType")
 	if !exist {
@@ -124,7 +124,7 @@ func (qc *QuizController) ToVerify(c *gin.Context) {
 		return
 	}
 
-	q, err := qc.service.ToVerify()
+	q, err := qc.service.NotVerified()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"massages": "failed to get data",

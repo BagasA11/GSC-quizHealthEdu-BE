@@ -3,12 +3,17 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"errors"
 	"fmt"
 	"net/http"
+
+	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 type QuestionController struct {
@@ -180,6 +185,68 @@ func (qc *QuestionController) Edit(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
 	})
+}
+
+func (qc *QuestionController) UploadFile(c *gin.Context) {
+	//token validation
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "forbidden access for user")
+		return
+	}
+	//get id parameter from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	dir, err := moveFile(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to upload file",
+			"error":   err,
+		})
+		return
+	}
+
+	err = qc.service.SetAvatar(uint(id), dir)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "failed",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, "success")
+
+}
+
+func moveFile(c *gin.Context) (string, error) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return "", err
+	}
+	//file extension validation
+	ext := strings.Split(file.Filename, ".")[1]
+	if ext == "" {
+		return "", errors.New("file extension undefined")
+	}
+	if !slices.Contains([]string{"jpg", "png", "jpeg", "svg"}, ext) {
+		return "", errors.New("file is not image type")
+	}
+	filename := uuid.New().String() + "." + ext
+	err = c.SaveUploadedFile(file, fmt.Sprintf("asset/img/question/%s", filename))
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("asset/img/question/%s", filename), nil
 }
 
 func (qc *QuestionController) Delete(c *gin.Context) {

@@ -48,6 +48,18 @@ func (qr *QuizRepository) Free() ([]models.Quiz, error) {
 	return freeQuizzes, err
 }
 
+func (qr *QuizRepository) CheckIMG(id uint) (string, bool) {
+	var quiz models.Quiz
+	err := qr.Db.Where("id = ?", id).First(&quiz).Error
+	if err != nil {
+		return "", false
+	}
+	if *quiz.Img == "" {
+		return "", false
+	}
+	return *quiz.Img, true
+}
+
 func (qr *QuizRepository) Cheapest() ([]models.Quiz, error) {
 	var cheapQuizzes []models.Quiz
 	//SELECT "id", "title", "topic", "desc", "price" FROM quizzess ORDER BY price ASC

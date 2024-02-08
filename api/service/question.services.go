@@ -51,6 +51,10 @@ func (qst *QuestionService) Updates(id uint, req *dto.Question) error {
 	return err
 }
 
+func (qs *QuestionService) SetAvatar(id uint, file string) error {
+	return qs.repository.SetAvatar(id, file)
+}
+
 func (qst *QuestionService) Delete(id uint) error {
 	err := qst.repository.Delete(id)
 	return err

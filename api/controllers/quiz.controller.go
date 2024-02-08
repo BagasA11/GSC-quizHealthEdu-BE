@@ -5,6 +5,7 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"BagasA11/GSC-quizHealthEdu-BE/helpers"
 	"errors"
 	"fmt"
 	"net/http"
@@ -293,7 +294,8 @@ func (qc *QuizController) UploadImgCover(c *gin.Context) {
 	}
 
 	//upload image from form file type
-	filePath, err := upload(c)
+	oldFile, exist := qc.service.CheckIMG(uint(id))
+	filePath, err := upload(c, oldFile, exist)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"massage": "failed to upload quiz image",
@@ -301,7 +303,6 @@ func (qc *QuizController) UploadImgCover(c *gin.Context) {
 		})
 		return
 	}
-
 	//save file path to database
 	err = qc.service.UploadImgCover(uint(id), filePath)
 	//error validation
@@ -315,8 +316,9 @@ func (qc *QuizController) UploadImgCover(c *gin.Context) {
 	c.JSON(http.StatusOK, "upload success")
 }
 
-func upload(c *gin.Context) (string, error) {
+func upload(c *gin.Context, oldFile string, exist bool) (string, error) {
 	file, err := c.FormFile("file")
+	//request validation
 	if err != nil {
 		return "", err
 	}
@@ -327,6 +329,18 @@ func upload(c *gin.Context) (string, error) {
 	}
 	if !slices.Contains([]string{"jpg", "jpeg", "png", "svg"}, ext) {
 		return "", errors.New("file not image type")
+	}
+
+	//check if image exist in dir
+	//img will be deleted
+	if exist {
+		//remove file from directory
+		err := helpers.RemoveFile(oldFile, "quiz")
+		//if error occur ... function will terminated with error
+		if err != nil {
+			return "", err
+		}
+
 	}
 	var filename string = uuid.NewString() + "." + ext
 	err = c.SaveUploadedFile(file, fmt.Sprintf("/asset/img/question/%s", filename))

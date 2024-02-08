@@ -47,6 +47,10 @@ func (qs *QuizService) FindTitle(title string) ([]models.Quiz, error) {
 	return q, err
 }
 
+func (qs *QuizService) CheckIMG(id uint) (string, bool) {
+	return qs.repository.CheckIMG(id)
+}
+
 func (qs *QuizService) Cheapest() ([]models.Quiz, error) {
 	q, err := qs.repository.Cheapest()
 	return q, err

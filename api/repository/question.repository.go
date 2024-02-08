@@ -49,15 +49,20 @@ func (qstRepo *QuestionRepository) GetQuestionAndOption(quizID uint) ([]models.Q
 	return quest, err
 }
 
-/*
-	func (qstRepo *QuestionRepository) pagination(quizID uint, pageID uint) error {
-		//max data = 1
-
-}
-*/
 func (qstRepo *QuestionRepository) Updates(quest models.Question) error {
 	tx := qstRepo.Db.Begin()
 	err := tx.Model(&models.Question{}).Where("id = ?", quest.ID).Updates(&quest).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
+}
+
+func (qr *QuestionRepository) SetAvatar(id uint, file string) error {
+	tx := qr.Db.Begin()
+	err := tx.Model(&models.Question{}).Where("id = ?", id).Update("img", file).Error
 	if err != nil {
 		tx.Rollback()
 		return err

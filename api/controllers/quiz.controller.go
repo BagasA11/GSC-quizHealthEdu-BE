@@ -112,6 +112,32 @@ func (qc *QuizController) All(c *gin.Context) {
 	})
 }
 
+func (qc *QuizController) ToVerify(c *gin.Context) {
+	//token validation
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "Token type not set in header")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "this resource is for admin only")
+		return
+	}
+
+	q, err := qc.service.ToVerify()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massages": "failed to get data",
+			"error":    err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "success",
+		"data":    q,
+	})
+}
+
 func (qc *QuizController) FindTopic(c *gin.Context) {
 	req := new(dto.FindTopic)
 	err := c.ShouldBindJSON(&req)
@@ -309,6 +335,35 @@ func upload(c *gin.Context) (string, error) {
 	}
 	path := "/asset/img/question/" + filename
 	return path, nil
+}
+
+func (qc *QuizController) Verify(c *gin.Context) {
+	//token validation
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type value is not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "user cannot access this resource")
+	}
+	//get id from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	err = qc.service.Verify(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "failed to verifying quiz",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, "success")
 }
 
 func (qc *QuizController) Delete(c *gin.Context) {

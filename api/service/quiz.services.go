@@ -57,6 +57,11 @@ func (qs *QuizService) FindTopic(topic string) ([]models.Quiz, error) {
 	return q, err
 }
 
+func (qs *QuizService) ToVerify() ([]models.Quiz, error) {
+	q, err := qs.repository.ToVerify()
+	return q, err
+}
+
 func (qs *QuizService) Update(id uint, req *dto.QuizCreate) error {
 	q := models.Quiz{
 		ID:    id,
@@ -74,5 +79,10 @@ func (qs *QuizService) UploadImgCover(id uint, file string) error {
 
 func (qs *QuizService) Delete(id uint) error {
 	err := qs.repository.Delete(id)
+	return err
+}
+
+func (qs *QuizService) Verify(id uint) error {
+	err := qs.repository.Verify(id)
 	return err
 }

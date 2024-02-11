@@ -51,3 +51,14 @@ func UpdateToken(refreshToken string) (string, error) {
 	}
 	return newToken, err
 }
+
+func InvalidateToken(inputToken string) error {
+	//get claims from input token
+	claims, err := ValidateToken(inputToken)
+	if err != nil {
+		return err
+	}
+	//force the token was expired
+	claims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now())
+	return nil
+}

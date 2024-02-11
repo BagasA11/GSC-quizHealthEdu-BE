@@ -23,7 +23,7 @@ func NewAuthService() *AuthService {
 
 func (as *AuthService) UserLogin(req *dto.UserLogin) (string, error) {
 	var user models.User
-	err := as.db.Where("email = ? AND admin = ?", req.Email, false).First(&user).Error
+	err := as.db.Where("username = ? AND admin = ?", req.Username, false).First(&user).Error
 	if err != nil {
 		return "", err
 	}
@@ -55,4 +55,8 @@ func (as *AuthService) AdmiLogin(req *dto.AdminLogin) (string, error) {
 
 	acessToken, err := helpers.GenerateAccessToken(user.ID, user.Username, "admin")
 	return acessToken, err
+}
+
+func (as *AuthService) Logout(token string) error {
+	return helpers.InvalidateToken(token)
 }

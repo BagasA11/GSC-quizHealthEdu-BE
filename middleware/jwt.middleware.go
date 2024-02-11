@@ -12,7 +12,7 @@ func JwtAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
+			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "access token required",
 			})
 			ctx.Abort()
@@ -37,7 +37,7 @@ func JwtAuth() gin.HandlerFunc {
 			return
 		}
 		ctx.Set("ID", claims.ID)
-		ctx.Set("username", claims.Username)
+		ctx.Set("Username", claims.Username)
 		ctx.Set("TokenType", claims.TokenType)
 		ctx.Next()
 	}

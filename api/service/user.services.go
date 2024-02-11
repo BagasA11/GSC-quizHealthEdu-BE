@@ -103,11 +103,21 @@ func (service *UserService) BlockUser(id uint) error {
 }
 
 func (service *UserService) UpdateUsername(id uint, req dto.UpdateUsername) error {
+
+	//ensure that password input is match
+	match, err := service.isPasswordMatch(id, req.Password)
+	if err != nil {
+		return err
+	}
+	if !match {
+		return errors.New("invalid password")
+	}
+
 	user := models.User{
 		ID:       id,
 		Username: req.Username,
 	}
-	err := service.repository.Updates(user)
+	err = service.repository.Updates(user)
 	return err
 }
 

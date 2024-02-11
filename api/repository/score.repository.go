@@ -36,11 +36,12 @@ func (sr *ScoreRepository) Rank() ([]models.Score, error) {
 	return ranks, err
 }
 
-func (sr *ScoreRepository) FindByUserID(id uint) (models.Score, error) {
-	var userScore models.Score
-	//SELECT * FROM scores WHERE user_id = {id}
-	err := sr.Db.Where("user_id = ?", id).First(&userScore).Error
-	return userScore, err
+// history
+func (sr *ScoreRepository) GetHistory(userId uint) ([]models.Score, error) {
+	var s []models.Score
+	//SELECT * FROM scores WHERE user_id = {userId} ORDER BY created_at DESC
+	err := sr.Db.Where("user_id = ?", userId).Order("created_at DESC").Find(&s).Error
+	return s, err
 }
 
 func (sr *ScoreRepository) Recents() ([]models.Score, error) {

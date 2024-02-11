@@ -77,6 +77,38 @@ func (oc *OptionController) Create(c *gin.Context) {
 	})
 }
 
+func (oc *OptionController) FindID(c *gin.Context) {
+	//token validation
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token type not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "User are not allowed to edit Option")
+		return
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	o, err := oc.service.FindID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"massage": "failed to get data",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"massage": "success",
+		"data":    o,
+	})
+}
+
 func (oc *OptionController) Edit(c *gin.Context) {
 	//token validation
 	_, exist := c.Get("ID")

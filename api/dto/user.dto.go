@@ -6,7 +6,7 @@ type AdminLogin struct {
 }
 
 type AdminCreate struct {
-	Email      string `json:"email" binding:"required,min=5"`
+	Email      string `json:"email" binding:"required,min=8"`
 	Username   string `json:"username" binding:"required"`
 	Password   string `json:"password" binding:"required,min=8"`
 	C_password string `json:"c-password" binding:"required,min=8"`
@@ -14,13 +14,13 @@ type AdminCreate struct {
 
 type UserCreate struct {
 	Username   string `json:"username" binding:"required,min=8"`
-	Email      string `json:"email" binding:"required,min=5"`
+	Email      string `json:"email" binding:"required,min=8"`
 	Password   string `json:"password" binding:"required,min=8"`
 	C_password string `json:"c-password" binding:"required,min=8"`
 }
 
 type UserLogin struct {
-	Email    string `json:"email" binding:"required,min=5"`
+	Username string `json:"username" binding:"required,min=8"`
 	Password string `json:"password" binding:"required,min=8"`
 }
 
@@ -31,6 +31,7 @@ type UpdatePassword struct {
 
 type UpdateUsername struct {
 	Username string `json:"username" binding:"required,min=8"`
+	Password string `json:"password" binding:"required,min=8"`
 }
 
 type DeleteUser struct {

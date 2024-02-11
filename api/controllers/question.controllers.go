@@ -42,7 +42,7 @@ func (qc *QuestionController) Create(c *gin.Context) {
 		return
 	}
 	//get quiz id from url
-	quizId, err := strconv.Atoi(c.Param("quizid"))
+	quizId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
@@ -116,7 +116,7 @@ func (qc *QuestionController) GetQuestionAndOption(c *gin.Context) {
 	}
 	//retrieve id from url
 	// url/quizid
-	quizID, err := strconv.Atoi(c.Param("quizid"))
+	quizID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "quiz id on url not found")
 		return

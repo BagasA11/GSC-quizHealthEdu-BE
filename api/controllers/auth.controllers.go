@@ -3,9 +3,9 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
-
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -104,4 +104,23 @@ func (ac *AuthController) AdmiLogin(c *gin.Context) {
 		"message": "login success",
 		"token":   accessToken,
 	})
+}
+
+func (ac *AuthController) Logout(c *gin.Context) {
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusUnauthorized, "token not found")
+		return
+	}
+	authHeader := c.Request.Header.Get("Authorization")
+	token := strings.Split(authHeader, " ")[1]
+	err := ac.service.Logout(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"massage": "invalid token",
+			"error":   err,
+		})
+		return
+	}
+	c.JSON(200, "success")
 }

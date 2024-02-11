@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJhZG1pbnN1cHJlbWUiLCJ0b2tlblR5cGUiOiJhZG1pbiIsImV4cCI6MTcwNzM1ODUzN30.wGALX99kAvop1bWZTOpmiE6NKfRja8UjWXpZyNcTDpo
 func UserRoutes(group *gin.RouterGroup) {
 	uc := controllers.NewUserController()
 	ac := controllers.NewAuthController()
@@ -29,11 +28,15 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.GET("/user/all", middleware.JwtAuth(), uc.AllUser)
 	//get user & admin profile
 	group.GET("/user", middleware.JwtAuth(), uc.Me)
+	//see another user profile by id given
+	group.GET("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
 	//update username ... admin is not allowed to update username
 	group.PUT("/user/username/update", middleware.JwtAuth(), uc.UpdateUsername)
+	//update password
+	group.PUT("/user/password", middleware.JwtAuth(), uc.UpdatePassword)
 	//delete user
 	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
-
+	group.GET("/user/logout", middleware.JwtAuth(), ac.Logout)
 	// ==================================
 
 	//admin

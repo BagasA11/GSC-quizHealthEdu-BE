@@ -121,16 +121,14 @@ func (ac *AuthController) Logout(c *gin.Context) {
 	}
 	if err := ac.service.Logout(strings.Split(token, " ")[1]); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"massage":      "failed to logout",
-			"error":        err,
-			"token header": strings.Split(token, " ")[1],
+			"massage": "failed to logout",
+			"error":   err,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"massage":      "logout success",
-		"token header": strings.Split(token, " ")[1],
+		"massage": "logout success",
 	})
 
 }

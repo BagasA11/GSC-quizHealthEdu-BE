@@ -70,6 +70,7 @@ func (qc *QuestionController) Create(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "failed to create Question",
+			"error":   err,
 		})
 		return
 	}
@@ -106,32 +107,71 @@ func (qc *QuestionController) FindID(c *gin.Context) {
 	})
 }
 
-func (qc *QuestionController) GetQuestionAndOption(c *gin.Context) {
+func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
+	//token validation
 	_, exist := c.Get("ID")
 	if !exist {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"massage": "token not available",
-		})
-		return
-	}
-	//retrieve id from url
-	// url/quizid
-	quizID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, "quiz id on url not found")
+		c.JSON(http.StatusBadRequest, "token id not found")
 		return
 	}
 
-	q, err := qc.service.GetQuizAndOption(uint(quizID))
+	// parsing url param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"massage": "invalid request",
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "id not found or param id not set",
 			"error":   err,
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data": q,
+	q, err := qc.service.AttemptQuiz(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"question": q,
+		"rows":     len(q),
+	})
+}
+
+func (qc *QuestionController) ReferToQuiz(c *gin.Context) {
+	_, exist := c.Get("ID")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token id not found")
+		return
+	}
+
+	typ, exist := c.Get("TokenType")
+	if !exist {
+		c.JSON(http.StatusBadRequest, "token access type not set")
+		return
+	}
+	if typ.(string) != "admin" {
+		c.JSON(http.StatusForbidden, "tihs page is admin only")
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"massage": "id not found",
+			"error":   err,
+		})
+		return
+	}
+	q, err := qc.service.ReferToQuiz(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"massages": "success",
+		"data":     q,
 	})
 }
 

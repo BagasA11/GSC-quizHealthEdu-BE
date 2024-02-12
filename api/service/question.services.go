@@ -26,6 +26,7 @@ func (qst *QuestionService) Create(quizId uint, req *dto.Question) error {
 	return err
 }
 
+// get all question which correspondent with quiz id
 func (qst *QuestionService) ReferToQuiz(quizID uint) ([]models.Question, error) {
 	q, err := qst.repository.ReferToQuiz(quizID)
 	return q, err
@@ -36,9 +37,9 @@ func (qs *QuestionService) FindID(id uint) (models.Question, error) {
 	return q, err
 }
 
-func (qst *QuestionService) GetQuizAndOption(quizID uint) ([]models.Question, error) {
-	qs, err := qst.repository.GetQuestionAndOption(quizID)
-	return qs, err
+func (qs *QuestionService) AttemptQuiz(quizID uint) ([]models.Question, error) {
+	q, err := qs.repository.QuestionAndOption(quizID)
+	return q, err
 }
 
 func (qst *QuestionService) Updates(id uint, req *dto.Question) error {

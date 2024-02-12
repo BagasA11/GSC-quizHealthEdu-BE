@@ -11,7 +11,10 @@ func QuestionRoutes(group *gin.RouterGroup) {
 	qc := controllers.NewQuestionController()
 	//get question detail by id
 	group.GET("/question/:id", middleware.JwtAuth(), qc.FindID)
-	group.GET("/quiz/:id/question", middleware.JwtAuth(), qc.GetQuestionAndOption)
+	//get all question to reviewed by admin
+	group.GET("/quiz/:id/refer-quiz", middleware.JwtAuth(), qc.ReferToQuiz)
+	//get all question to be attempt by user
+	group.GET("/quiz/:id/attempt", middleware.JwtAuth(), qc.AttemptQuiz)
 	//create new quiz
 	group.POST("/quiz/:id/question/create", middleware.JwtAuth(), qc.Create)
 	group.PUT("/question/update/:id", middleware.JwtAuth(), qc.Edit)

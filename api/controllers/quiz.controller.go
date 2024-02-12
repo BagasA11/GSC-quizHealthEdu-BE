@@ -101,6 +101,7 @@ func (qc *QuizController) FindCheapest(c *gin.Context) {
 
 func (qc *QuizController) All(c *gin.Context) {
 	q, err := qc.service.All()
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "failed to get data",
@@ -234,7 +235,7 @@ func (qc *QuizController) Edit(c *gin.Context) {
 		return
 	}
 	//parsing request body
-	req := new(dto.QuizCreate)
+	req := new(dto.QuizEdit)
 	err := c.ShouldBindJSON(&req)
 	//request validation
 	if err != nil {
@@ -343,7 +344,7 @@ func upload(c *gin.Context, oldFile string, exist bool) (string, error) {
 
 	}
 	var filename string = uuid.NewString() + "." + ext
-	err = c.SaveUploadedFile(file, fmt.Sprintf("/asset/img/question/%s", filename))
+	err = c.SaveUploadedFile(file, fmt.Sprintf("asset/img/quiz/%s", filename))
 	if err != nil {
 		return "", err
 	}

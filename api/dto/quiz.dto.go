@@ -9,6 +9,11 @@ type QuizCreate struct {
 	Img   *multipart.FileHeader `form:"file"`
 }
 
+type QuizEdit struct {
+	Title string `json:"title"`
+	Topic string `json:"topic"`
+	Desc  string `json:"desc"`
+}
 type Question struct {
 	Question string `json:"question" binding:"required"`
 	Answer   string `json:"answer" binding:"required"`

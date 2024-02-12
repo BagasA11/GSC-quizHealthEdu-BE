@@ -3,7 +3,6 @@ package controllers
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
-	"BagasA11/GSC-quizHealthEdu-BE/helpers"
 	"errors"
 	"fmt"
 	"net/http"
@@ -375,8 +374,8 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 		})
 		return
 	}
-	oldFile, exist := uc.service.CheckAvatar(id.(uint))
-	filename, err := uploadAvatar(c, oldFile, exist)
+
+	filename, err := uploadAvatar(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"massage": "failed to upload avatar",
@@ -396,7 +395,7 @@ func (uc *UserController) UpdateAvatar(c *gin.Context) {
 }
 
 /*return path of image and nil error if success, else: return empty string and error*/
-func uploadAvatar(c *gin.Context, old string, exist bool) (string, error) {
+func uploadAvatar(c *gin.Context) (string, error) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return "", err
@@ -412,13 +411,6 @@ func uploadAvatar(c *gin.Context, old string, exist bool) (string, error) {
 
 	filename := uuid.New().String() + "." + ext //img.jpg
 
-	//if file exist ... img in dir will deleted
-	if exist {
-		err := helpers.RemoveFile(old, "user")
-		if err != nil {
-			return "", err
-		}
-	}
 	err = c.SaveUploadedFile(file, fmt.Sprintf("asset/img/user/%s", filename))
 	if err != nil {
 		return "", err

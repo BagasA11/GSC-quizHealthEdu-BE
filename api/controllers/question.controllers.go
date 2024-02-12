@@ -109,13 +109,14 @@ func (qc *QuestionController) FindID(c *gin.Context) {
 
 func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
 	//token validation
-	_, exist := c.Get("ID")
+	userID, exist := c.Get("ID")
 	if !exist {
 		c.JSON(http.StatusBadRequest, "token id not found")
 		return
 	}
 
 	// parsing url param
+	//get quiz id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -124,6 +125,11 @@ func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
 		})
 		return
 	}
+
+	//insert quiz id to cookie
+	c.SetCookie("quizID", strconv.Itoa(id), 30*60, "/", "localhost", false, true)
+	//insert user id to cookie
+	c.SetCookie("userID", strconv.Itoa(userID.(int)), 30*60, "/", "localhost", false, true)
 	q, err := qc.service.AttemptQuiz(uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

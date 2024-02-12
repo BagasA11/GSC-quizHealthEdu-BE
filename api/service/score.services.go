@@ -17,6 +17,7 @@ func NewScoreService() *ScoreService {
 }
 
 func (ss *ScoreService) Create(req dto.Score) error {
+
 	s := models.Score{
 		QuizID: req.QuizID,
 		UserID: req.UserID,

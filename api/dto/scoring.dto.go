@@ -5,3 +5,9 @@ type Score struct {
 	UserID uint    `json:"userId" binding:"required"`
 	Score  float64 `json:"score" binding:"required"`
 }
+
+type Answer struct {
+	QuestID  uint   `json:"questID" binding:"required"`
+	Answer   string `json:"ans" binding:"required,max=1"`
+	Checkbox string `json:"checkbox" binding:"required,max=1"`
+}

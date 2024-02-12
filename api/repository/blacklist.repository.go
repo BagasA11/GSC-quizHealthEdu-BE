@@ -18,15 +18,15 @@ func NewBlacklistRepository() *BlacklistRepository {
 	}
 }
 
-func (br *BlacklistRepository) Create(bt models.BlacklistToken) error {
-	tx := br.DB.Begin()
-	err := tx.Create(&br).Error
+func (brepo *BlacklistRepository) Create(bt models.BlacklistToken) error {
+	tx := brepo.DB.Begin()
+	err := tx.Create(&bt).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 	tx.Commit()
-	return err
+	return nil
 }
 
 func (br *BlacklistRepository) FindToken(oldtoken string) error {
@@ -37,4 +37,10 @@ func (br *BlacklistRepository) FindToken(oldtoken string) error {
 		return nil
 	}
 	return errors.New("blacklist token found")
+}
+
+func (br *BlacklistRepository) All() ([]models.BlacklistToken, error) {
+	var bt []models.BlacklistToken
+	err := br.DB.Find(&br).Error
+	return bt, err
 }

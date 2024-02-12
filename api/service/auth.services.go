@@ -3,6 +3,7 @@ package service
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
 	"BagasA11/GSC-quizHealthEdu-BE/api/models"
+	"BagasA11/GSC-quizHealthEdu-BE/api/repository"
 	"BagasA11/GSC-quizHealthEdu-BE/configs"
 	"BagasA11/GSC-quizHealthEdu-BE/helpers"
 	"errors"
@@ -57,6 +58,12 @@ func (as *AuthService) AdmiLogin(req *dto.AdminLogin) (string, error) {
 	return acessToken, err
 }
 
+// return error or nil error
 func (as *AuthService) Logout(token string) error {
 	return helpers.BlacklistToken(token)
+}
+
+func (as *AuthService) ListAllToken() ([]models.BlacklistToken, error) {
+	bt, err := repository.NewBlacklistRepository().All()
+	return bt, err
 }

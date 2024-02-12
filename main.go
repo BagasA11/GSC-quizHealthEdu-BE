@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+	fmt.Println("=====================================")
+	fmt.Println()
+	fmt.Println()
 	fmt.Println("main.go...")
 	err := godotenv.Load()
 	if err != nil {

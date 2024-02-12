@@ -36,7 +36,7 @@ func InitDb() error {
 		return err
 	}
 
-	dbClient.AutoMigrate(&models.User{}, &models.Quiz{}, &models.Question{}, &models.Option{}, &models.Score{}, &models.TopUp{}, &models.Transaction{})
+	dbClient.AutoMigrate(&models.User{}, &models.Quiz{}, &models.Question{}, &models.Option{}, &models.Score{}, &models.TopUp{}, &models.Transaction{}, &models.BlacklistToken{})
 	return nil
 }
 

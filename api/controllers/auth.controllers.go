@@ -117,15 +117,31 @@ func (ac *AuthController) Logout(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, "user token required")
+		return
 	}
-	err := ac.service.Logout(strings.Split(token, " ")[1])
-	if err != nil {
+	if err := ac.service.Logout(strings.Split(token, " ")[1]); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"massage": "failed to logout",
-			"error":   err,
+			"massage":      "failed to logout",
+			"error":        err,
+			"token header": strings.Split(token, " ")[1],
 		})
 		return
 	}
-	c.JSON(http.StatusOK, "logout success")
 
+	c.JSON(http.StatusOK, gin.H{
+		"massage":      "logout success",
+		"token header": strings.Split(token, " ")[1],
+	})
+
+}
+
+func (ac *AuthController) AllToken(c *gin.Context) {
+	bt, err := ac.service.ListAllToken()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "token are empty")
+		return
+	}
+	c.JSON(200, gin.H{
+		"all token": bt,
+	})
 }

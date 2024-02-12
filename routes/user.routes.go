@@ -55,4 +55,6 @@ func UserRoutes(group *gin.RouterGroup) {
 	//block user ... admin cannot be blocked
 	group.PUT("/user/block/:id", middleware.JwtAuth(), uc.BlockUser)
 	//general
+
+	group.GET("/token", ac.AllToken)
 }

@@ -17,7 +17,7 @@ func GenerateAccessToken(ID uint, username string, tokenType string) (string, er
 		Username:  username,
 		TokenType: tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
 	}
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(configs.JWT_KEY)
@@ -68,5 +68,8 @@ func BlacklistToken(token string) error {
 	bt := models.BlacklistToken{
 		Token: token,
 	}
-	return repository.NewBlacklistRepository().Create(bt)
+	if err := repository.NewBlacklistRepository().Create(bt); err != nil {
+		return err
+	}
+	return nil
 }

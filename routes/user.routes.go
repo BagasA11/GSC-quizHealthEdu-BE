@@ -30,13 +30,17 @@ func UserRoutes(group *gin.RouterGroup) {
 	group.GET("/user", middleware.JwtAuth(), uc.Me)
 	//see another user profile by id given
 	group.GET("/user/:id", middleware.JwtAuth(), uc.GetUserByID)
+	//logout
+	group.GET("/user/logout", middleware.JwtAuth(), ac.Logout)
 	//update username ... admin is not allowed to update username
 	group.PUT("/user/username/update", middleware.JwtAuth(), uc.UpdateUsername)
 	//update password
 	group.PUT("/user/password", middleware.JwtAuth(), uc.UpdatePassword)
+	//avatar
+	group.PUT("/user/avatar", middleware.JwtAuth(), uc.UpdateAvatar)
 	//delete user
 	group.DELETE("/user/delete", middleware.JwtAuth(), uc.Delete)
-	group.GET("/user/logout", middleware.JwtAuth(), ac.Logout)
+
 	// ==================================
 
 	//admin

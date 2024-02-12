@@ -107,20 +107,25 @@ func (ac *AuthController) AdmiLogin(c *gin.Context) {
 }
 
 func (ac *AuthController) Logout(c *gin.Context) {
+	//user id token validation
 	_, exist := c.Get("ID")
 	if !exist {
-		c.JSON(http.StatusUnauthorized, "token not found")
+		c.JSON(http.StatusBadRequest, "user id not found")
 		return
 	}
-	authHeader := c.Request.Header.Get("Authorization")
-	token := strings.Split(authHeader, " ")[1]
-	err := ac.service.Logout(token)
+	//get user token from auth header
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, "user token required")
+	}
+	err := ac.service.Logout(strings.Split(token, " ")[1])
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"massage": "invalid token",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"massage": "failed to logout",
 			"error":   err,
 		})
 		return
 	}
-	c.JSON(200, "success")
+	c.JSON(http.StatusOK, "logout success")
+
 }

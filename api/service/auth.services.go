@@ -58,5 +58,5 @@ func (as *AuthService) AdmiLogin(req *dto.AdminLogin) (string, error) {
 }
 
 func (as *AuthService) Logout(token string) error {
-	return helpers.InvalidateToken(token)
+	return helpers.BlacklistToken(token)
 }

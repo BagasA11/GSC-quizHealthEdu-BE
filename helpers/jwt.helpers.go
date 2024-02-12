@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"BagasA11/GSC-quizHealthEdu-BE/api/models"
+	"BagasA11/GSC-quizHealthEdu-BE/api/repository"
 	"BagasA11/GSC-quizHealthEdu-BE/configs"
 	"fmt"
 	"log"
@@ -15,7 +17,7 @@ func GenerateAccessToken(ID uint, username string, tokenType string) (string, er
 		Username:  username,
 		TokenType: tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(20 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Minute)),
 		},
 	}
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(configs.JWT_KEY)
@@ -27,16 +29,26 @@ func GenerateAccessToken(ID uint, username string, tokenType string) (string, er
 }
 
 func ValidateToken(inputToken string) (*configs.JWTClaims, error) {
+	//check token from blacklist token
+	br := repository.NewBlacklistRepository()
+	err := br.FindToken(inputToken)
+	if err != nil {
+		return nil, err
+	}
+
+	//get token from input token
 	token, err := jwt.ParseWithClaims(inputToken, &configs.JWTClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(configs.JWT_KEY), nil
 	})
 	if err != nil {
 		return nil, err
 	}
-
+	//get claims from token
+	//if ok, then return claims, nil
 	if claims, ok := token.Claims.(*configs.JWTClaims); ok && token.Valid {
 		return claims, nil
 	}
+	//else: return nil, error
 	return nil, fmt.Errorf("invalid token")
 }
 
@@ -52,13 +64,9 @@ func UpdateToken(refreshToken string) (string, error) {
 	return newToken, err
 }
 
-func InvalidateToken(inputToken string) error {
-	//get claims from input token
-	claims, err := ValidateToken(inputToken)
-	if err != nil {
-		return err
+func BlacklistToken(token string) error {
+	bt := models.BlacklistToken{
+		Token: token,
 	}
-	//force the token was expired
-	claims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now())
-	return nil
+	return repository.NewBlacklistRepository().Create(bt)
 }

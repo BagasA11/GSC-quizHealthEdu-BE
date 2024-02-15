@@ -11,3 +11,11 @@ type Answer struct {
 	Answer   string `json:"ans" binding:"required,max=1"`
 	Checkbox string `json:"checkbox" binding:"required,max=1"`
 }
+
+type ScoreTransaction struct {
+	QuizID uint
+	Answer string
+	UserID uint
+	Check  string
+	Point  float64
+}

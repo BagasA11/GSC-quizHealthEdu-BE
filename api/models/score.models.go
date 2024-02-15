@@ -27,3 +27,10 @@ func (score *Score) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("UpdatedAt", time.Now())
 	return nil
 }
+
+func (score *Score) BeforeUpdate(tx *gorm.DB) error {
+	// generate time
+
+	tx.Statement.SetColumn("UpdatedAt", time.Now())
+	return nil
+}

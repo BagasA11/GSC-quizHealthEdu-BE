@@ -29,10 +29,16 @@ func (sr *ScoreRepository) CreateScore(score models.Score) error {
 	return err
 }
 
-func (sr *ScoreRepository) Rank() ([]models.Score, error) {
+func (sr *ScoreRepository) FindID(id uint) (models.Score, error) {
+	var s models.Score
+	err := sr.Db.Where("id = ?", id).First(&s).Error
+	return s, err
+}
+
+func (sr *ScoreRepository) Rank(quizID uint) ([]models.Score, error) {
 	var ranks []models.Score
 	// SELECT * FROM scores ORDER BY point DESC
-	err := sr.Db.Find(&ranks).Order("point DESC").Error
+	err := sr.Db.Where("quiz_id = ?", quizID).Find(&ranks).Order("point DESC").Error
 	return ranks, err
 }
 
@@ -42,13 +48,6 @@ func (sr *ScoreRepository) GetHistory(userId uint) ([]models.Score, error) {
 	//SELECT * FROM scores WHERE user_id = {userId} ORDER BY created_at DESC
 	err := sr.Db.Where("user_id = ?", userId).Order("created_at DESC").Find(&s).Error
 	return s, err
-}
-
-func (sr *ScoreRepository) Recents() ([]models.Score, error) {
-	var scores []models.Score
-	//SELECT * FROM scores WHERE created_at >= DATEADD(hour, -2, GETDATE())
-	err := sr.Db.Where("created_at >= ?", time.Now().Add(time.Hour*(-2))).Find(&scores).Order("point DESC").Error
-	return scores, err
 }
 
 func (sr *ScoreRepository) Update(score models.Score) error {

@@ -30,6 +30,16 @@ func (ss *ScoreService) GetHistory(userID uint) ([]models.Score, error) {
 	return ss.repository.GetHistory(userID)
 }
 
-func (ss *ScoreService) Rank() ([]models.Score, error) {
-	return ss.repository.Rank()
+func (ss *ScoreService) Rank(quizID uint) ([]models.Score, error) {
+	return ss.repository.Rank(quizID)
+}
+
+func (ss *ScoreService) Update(id uint, req dto.Score) error {
+	s := models.Score{
+		ID:     id,
+		QuizID: req.QuizID,
+		UserID: req.UserID,
+		Point:  req.Score,
+	}
+	return ss.repository.Update(s)
 }

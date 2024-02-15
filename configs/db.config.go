@@ -26,7 +26,7 @@ var dbClient *gorm.DB
 //
 // )
 // "root":""@tcp("127.0.0.1":"3306")/"gsc-quiz-healthedu"?charset=utf8mb4&parseTime=True&loc=Local
-var Dsn = "root:@tcp(127.0.0.1:3306)/gsc-quiz-healthedu?charset=utf8mb4&parseTime=True&loc=Local"
+var Dsn = "root:@tcp(127.0.0.1:3306)/golang-gsc2024?charset=utf8mb4&parseTime=True&loc=Local"
 
 func InitDb() error {
 	var err error

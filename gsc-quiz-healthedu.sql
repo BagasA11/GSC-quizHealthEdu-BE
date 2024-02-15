@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2024 at 03:39 PM
+-- Generation Time: Feb 15, 2024 at 01:22 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -205,7 +205,8 @@ INSERT INTO `users` (`id`, `created_at`, `updated_at`, `deleted_at`, `username`,
 (5, '2024-02-07 13:09:55.000', '2024-02-07 13:09:55.000', NULL, 'adminsupreme', 'admin01@gmail.com', '$2y$10$P3ZC/prw1dWv6u6/U4Q5peOq7CVrkNGw5rxLIpDMz2nN1/MtfQgnq', NULL, NULL, 1, 0, 0),
 (6, '2024-02-07 13:19:47.293', '2024-02-07 13:19:47.293', NULL, 'bb3f31d0-9ce3-4e53-86ac-2aaced734fd3', 'admin2@gmail.com', '$2a$10$VggpHER4/UfIhNqR.lkzQOpej0VCojMliCAq.V7zmP66/3EDT87VK', NULL, NULL, 1, 0, 0),
 (7, '2024-02-10 23:07:19.261', '2024-02-12 10:39:30.404', NULL, 'userUrutKe3', 'user3@gmail.com', '$2a$10$x10q6MW6U2h7KibYMeu61exyYwaeibDCvIkZ8KE87GfLCJHLYTNlK', NULL, '/asset/img/user/691a1c05-177b-44fd-8ada-ecac1f90e422.png', 0, 0, 0),
-(8, '2024-02-12 16:43:02.846', '2024-02-12 16:43:02.846', NULL, 'userFiktif1', 'fictiveuser@gmail.com', '$2a$10$yLWCwJxlcI0UiV/TWX2RP.e9nX6iUbTsWvQO2TjheNMF5EuBRSKVy', NULL, NULL, 0, 0, 0);
+(8, '2024-02-12 16:43:02.846', '2024-02-12 16:43:02.846', NULL, 'userFiktif1', 'fictiveuser@gmail.com', '$2a$10$yLWCwJxlcI0UiV/TWX2RP.e9nX6iUbTsWvQO2TjheNMF5EuBRSKVy', NULL, NULL, 0, 0, 0),
+(9, '2024-02-15 19:17:04.000', '2024-02-15 19:19:48.000', NULL, 'admin_ke002', 'admin02@gmail.com', '$2y$10$Zsykp1rCn94sknTfGcOSGOzI.AeF6xB9xYWfoyBPjC44QLm9zDmTS', NULL, NULL, 0, 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -332,7 +333,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

@@ -35,6 +35,22 @@ func (sr *ScoreRepository) FindID(id uint) (models.Score, error) {
 	return s, err
 }
 
+func (sr *ScoreRepository) UpdateOrCreate(id uint, score models.Score) error {
+	tx := sr.Db.Begin()
+	if tx.Model(&models.Score{}).Where("id = ?", id).Updates(&score).RowsAffected == 0 {
+		tx.Rollback()
+		err := tx.Create(&score).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		tx.Commit()
+		return nil
+	}
+	tx.Commit()
+	return nil
+}
+
 func (sr *ScoreRepository) Rank(quizID uint) ([]models.Score, error) {
 	var ranks []models.Score
 	// SELECT * FROM scores ORDER BY point DESC

@@ -129,7 +129,7 @@ func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
 	//insert quiz id to cookie
 	c.SetCookie("quizID", strconv.Itoa(id), 30*60, "/", "localhost", false, true)
 	//insert user id to cookie
-	c.SetCookie("userID", strconv.Itoa(userID.(int)), 30*60, "/", "localhost", false, true)
+	c.SetCookie("userID", strconv.Itoa(int(userID.(uint))), 30*60, "/", "localhost", false, true)
 	q, err := qc.service.AttemptQuiz(uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

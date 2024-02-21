@@ -3,6 +3,7 @@ package repository
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/models"
 	"BagasA11/GSC-quizHealthEdu-BE/configs"
+
 	"time"
 
 	"gorm.io/gorm"
@@ -18,15 +19,27 @@ func NewScoreRepository() *ScoreRepository {
 	}
 }
 
-func (sr *ScoreRepository) CreateScore(score models.Score) error {
+func (sr *ScoreRepository) CreateScore(score models.Score) (uint, error) {
 	tx := sr.Db.Begin()
 	err := tx.Create(&score).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
 	}
 	tx.Commit()
-	return err
+	return score.ID, err
+}
+
+// ===
+// ===
+
+func (sr *ScoreRepository) GetIDWithQuizIDAndUserID(quizID uint, userID uint) (uint, error) {
+	var s models.Score
+	err := sr.Db.Where("user_id = ? AND quiz_id = ?", userID, quizID).Order("updated_at DESC").First(&s).Error
+	if err != nil {
+		return 0, err
+	}
+	return s.ID, nil
 }
 
 func (sr *ScoreRepository) FindID(id uint) (models.Score, error) {

@@ -109,7 +109,7 @@ func (qc *QuestionController) FindID(c *gin.Context) {
 
 func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
 	//token validation
-	userID, exist := c.Get("ID")
+	_, exist := c.Get("ID")
 	if !exist {
 		c.JSON(http.StatusBadRequest, "token id not found")
 		return
@@ -117,28 +117,28 @@ func (qc *QuestionController) AttemptQuiz(c *gin.Context) {
 
 	// parsing url param
 	//get quiz id
-	id, err := strconv.Atoi(c.Param("id"))
+	quizID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"massage": "id not found or param id not set",
-			"error":   err,
+			"error":   err.Error(),
 		})
 		return
 	}
 
-	//insert quiz id to cookie
-	c.SetCookie("quizID", strconv.Itoa(id), 30*60, "/", "localhost", false, true)
-	//insert user id to cookie
-	c.SetCookie("userID", strconv.Itoa(int(userID.(uint))), 30*60, "/", "localhost", false, true)
-	q, err := qc.service.AttemptQuiz(uint(id))
+	q, err := qc.service.AttemptQuiz(uint(quizID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
+
+	num := number(len(q))
+
 	c.JSON(200, gin.H{
 		"question": q,
+		"num":      num,
 		"rows":     len(q),
 	})
 }
@@ -169,12 +169,15 @@ func (qc *QuestionController) ReferToQuiz(c *gin.Context) {
 		return
 	}
 	q, err := qc.service.ReferToQuiz(uint(id))
+	//q: [{id, question, answer}, {id, question, answer}]
+	//[{1, ".......", A}, {3, ....., C}, {11, ......, E}]
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
+
 	c.JSON(200, gin.H{
 		"massages": "success",
 		"data":     q,
@@ -327,4 +330,12 @@ func (qc *QuestionController) Delete(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, "delete question success")
+}
+
+func number(rows int) []uint {
+	num := []uint{}
+	for i := 1; i <= rows; i++ {
+		num = append(num, uint(i))
+	}
+	return num
 }

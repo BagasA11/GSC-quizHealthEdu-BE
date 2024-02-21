@@ -9,7 +9,7 @@ import (
 type Score struct {
 	gorm.Model
 	ID        uint    `gorm:"primaryKey"`
-	Point     float64 `gorm:"not null;default:0"`
+	Point     float32 `gorm:"not null;default:0"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time

@@ -31,7 +31,7 @@ func (qstRepo *QuestionRepository) Create(quest models.Question) error {
 /*get all question which connected to quiz id*/
 func (qstRepo *QuestionRepository) ReferToQuiz(quizId uint) ([]models.Question, error) {
 	var quest []models.Question
-	err := qstRepo.Db.Where("quiz_id = ?", quizId).Find(&quest).Error
+	err := qstRepo.Db.Where("quiz_id = ?", quizId).Order("id ASC").Find(&quest).Error
 	return quest, err
 }
 

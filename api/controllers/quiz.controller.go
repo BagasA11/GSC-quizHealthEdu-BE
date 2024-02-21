@@ -41,7 +41,7 @@ func (qc *QuizController) Create(c *gin.Context) {
 	//initial request data
 	req := new(dto.QuizCreate)
 	//bind data from request
-	err := c.Bind(&req)
+	err := c.ShouldBindJSON(&req)
 	//request validation
 	if err != nil {
 		validationErrs, ok := err.(validator.ValidationErrors)
@@ -59,21 +59,7 @@ func (qc *QuizController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorMessage)
 		return
 	}
-	//if file uploaded
-	//upload image from form file type
-	if req.Img.Filename != "" {
-		err = c.SaveUploadedFile(req.Img, fmt.Sprintf("asset/img/quiz/%s", req.Img.Filename))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"massages": "failed to upload image",
-				"error":    err,
-			})
-			return
-		}
-	}
-	//file not uploaded
-	//assign file to nil to ensure that filename value not set to database
-	req.Img = nil
+
 	err = qc.service.CreateQuiz(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

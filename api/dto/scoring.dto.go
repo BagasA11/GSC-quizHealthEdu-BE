@@ -3,19 +3,12 @@ package dto
 type Score struct {
 	QuizID uint    `json:"quizId" binding:"required"`
 	UserID uint    `json:"userId" binding:"required"`
-	Score  float64 `json:"score" binding:"required"`
+	Score  float32 `json:"score" binding:"required"`
 }
 
 type Answer struct {
-	QuestID  uint   `json:"questID" binding:"required"`
-	Answer   string `json:"ans" binding:"required,max=1"`
+	Num      uint   `json:"num" binding:"required"`
+	Length   uint   `json:"length" binding:"required"`
+	Answer   string `json:"answer" binding:"required,max=1"`
 	Checkbox string `json:"checkbox" binding:"required,max=1"`
-}
-
-type ScoreTransaction struct {
-	QuizID uint
-	Answer string
-	UserID uint
-	Check  string
-	Point  float64
 }

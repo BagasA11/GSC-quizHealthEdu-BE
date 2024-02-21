@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2024 at 01:22 PM
+-- Generation Time: Feb 21, 2024 at 04:27 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gsc-quiz-healthedu`
+-- Database: `golang-gsc2024`
 --
 
 -- --------------------------------------------------------
@@ -40,8 +40,7 @@ CREATE TABLE `blacklist_tokens` (
 --
 
 INSERT INTO `blacklist_tokens` (`id`, `created_at`, `updated_at`, `deleted_at`, `token`) VALUES
-(1, '2024-02-12 09:50:42.455', '2024-02-12 09:50:42.456', NULL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywidXNlcm5hbWUiOiJ1c2VyVXJ1dEtlMyIsInRva2VuVHlwZSI6InVzZXIiLCJleHAiOjE3MDc3MDk3NTB9.pR6pNiWQdF__MFxMvpigjjshmf-vMSprlM0w8ANOPSI'),
-(2, '2024-02-12 20:55:53.800', '2024-02-12 20:55:53.800', NULL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJhZG1pbnN1cHJlbWUiLCJ0b2tlblR5cGUiOiJhZG1pbiIsImV4cCI6MTcwNzc0OTQ2OH0.IyboiCe1iNRUXYT8bn-5ycFtTy7_OJXvXbrhaghAEis');
+(1, '2024-02-15 22:00:52.359', '2024-02-15 22:00:52.359', NULL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyRmlrdGlmMSIsInRva2VuVHlwZSI6InVzZXIiLCJleHAiOjE3MDgwMTEwMTd9.iZPS7jYglG8T9MW02B723Ps8Kr7PcgBvH2_B6F6U1B0');
 
 -- --------------------------------------------------------
 
@@ -56,20 +55,24 @@ CREATE TABLE `options` (
   `deleted_at` datetime(3) DEFAULT NULL,
   `alphabet` varchar(1) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `question_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `color` varchar(30) NOT NULL DEFAULT 'white'
+  `color` varchar(30) NOT NULL DEFAULT 'white',
+  `question_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `options`
 --
 
-INSERT INTO `options` (`id`, `created_at`, `updated_at`, `deleted_at`, `alphabet`, `text`, `question_id`, `color`) VALUES
-(1, '2024-02-12 20:39:34.460', '2024-02-12 20:52:00.474', NULL, 'A', 'Wortel', 2, 'white'),
-(2, '2024-02-12 20:39:59.207', '2024-02-12 20:39:59.207', NULL, 'B', 'Tahu', 2, 'red'),
-(3, '2024-02-12 20:40:29.168', '2024-02-12 20:40:29.168', NULL, 'C', 'Bayam', 2, 'blue'),
-(4, '2024-02-12 20:41:03.616', '2024-02-12 20:41:03.616', NULL, 'D', 'Kangkung', 2, 'white'),
-(5, '2024-02-12 20:53:59.337', '2024-02-12 20:53:59.337', NULL, 'D', 'Kangkung', 2, 'white');
+INSERT INTO `options` (`id`, `created_at`, `updated_at`, `deleted_at`, `alphabet`, `text`, `color`, `question_id`) VALUES
+(1, '2024-02-19 16:33:23.808', '2024-02-19 16:33:23.808', NULL, 'A', 'Daging Unggas', 'white', 1),
+(2, '2024-02-19 16:33:45.467', '2024-02-19 16:33:45.467', NULL, 'B', 'Bayam', 'Red', 1),
+(3, '2024-02-19 16:34:03.679', '2024-02-19 16:34:03.679', NULL, 'C', 'Telur', 'yellow', 1),
+(4, '2024-02-19 16:34:28.101', '2024-02-19 16:34:28.101', NULL, 'D', 'Tempe', 'green', 1),
+(5, '2024-02-19 16:36:10.330', '2024-02-19 16:36:10.330', NULL, 'A', 'Tempe', 'green', 2),
+(6, '2024-02-19 16:36:26.032', '2024-02-19 16:36:26.032', NULL, 'A', 'Ayam', 'red', 2),
+(7, '2024-02-19 16:36:56.875', '2024-02-19 16:36:56.875', NULL, 'B', 'Sapi', 'red', 2),
+(8, '2024-02-19 16:37:10.099', '2024-02-19 16:37:10.099', NULL, 'C', 'Sapi', 'purple', 2),
+(9, '2024-02-19 16:40:01.928', '2024-02-19 16:40:01.928', NULL, 'A', 'wortel', 'orange', 3);
 
 -- --------------------------------------------------------
 
@@ -83,18 +86,19 @@ CREATE TABLE `questions` (
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
   `question` longtext NOT NULL,
+  `img` longtext DEFAULT NULL,
   `answer` varchar(1) NOT NULL,
-  `quiz_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `img` longtext DEFAULT NULL
+  `quiz_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `created_at`, `updated_at`, `deleted_at`, `question`, `answer`, `quiz_id`, `img`) VALUES
-(2, '2024-02-12 15:33:31.146', '2024-02-12 16:53:39.608', NULL, 'Makanan manakah yang merupakan sumber protein nabati', 'B', 2, 'asset/img/question/2e611d24-bcee-4490-926b-7234266c8dbd.jpg'),
-(3, '2024-02-12 16:56:09.508', '2024-02-12 16:56:09.508', '2024-02-12 16:58:10.996', 'Soal gagal', 'A', 2, NULL);
+INSERT INTO `questions` (`id`, `created_at`, `updated_at`, `deleted_at`, `question`, `img`, `answer`, `quiz_id`) VALUES
+(1, '2024-02-19 16:31:37.346', '2024-02-19 16:31:37.346', NULL, 'Yang merupakan sumber protein kecuali', NULL, 'B', 1),
+(2, '2024-02-19 16:34:55.344', '2024-02-19 16:34:55.344', NULL, 'Yang merupakan sumber protein hewani, kecuali...', NULL, 'A', 1),
+(3, '2024-02-19 16:39:09.285', '2024-02-19 16:39:09.285', NULL, 'Yang merupakan sumber vitamin A', NULL, 'A', 1);
 
 -- --------------------------------------------------------
 
@@ -109,20 +113,20 @@ CREATE TABLE `quizzes` (
   `deleted_at` datetime(3) DEFAULT NULL,
   `title` varchar(191) NOT NULL,
   `topic` varchar(50) NOT NULL,
-  `free` tinyint(1) NOT NULL DEFAULT 1,
-  `price` bigint(20) UNSIGNED DEFAULT NULL,
-  `disc` int(11) NOT NULL DEFAULT 0,
   `img` longtext DEFAULT NULL,
   `desc` longtext NOT NULL,
-  `verified` tinyint(1) NOT NULL DEFAULT 0
+  `verified` tinyint(1) NOT NULL DEFAULT 0,
+  `free` tinyint(1) NOT NULL DEFAULT 1,
+  `price` bigint(20) UNSIGNED DEFAULT NULL,
+  `disc` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `quizzes`
 --
 
-INSERT INTO `quizzes` (`id`, `created_at`, `updated_at`, `deleted_at`, `title`, `topic`, `free`, `price`, `disc`, `img`, `desc`, `verified`) VALUES
-(2, '2024-02-07 12:47:45.000', '2024-02-07 12:47:45.000', NULL, 'Coba', 'coba', 1, NULL, 0, NULL, 'percobaan', 0);
+INSERT INTO `quizzes` (`id`, `created_at`, `updated_at`, `deleted_at`, `title`, `topic`, `img`, `desc`, `verified`, `free`, `price`, `disc`) VALUES
+(1, '2024-02-19 16:29:51.564', '2024-02-19 16:43:18.002', NULL, 'Makanan Sehat Lezat dan Bergizi', 'pangan', NULL, 'desc', 1, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -135,10 +139,17 @@ CREATE TABLE `scores` (
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `point` double NOT NULL DEFAULT 0,
+  `point` float NOT NULL DEFAULT 0,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `quiz_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `scores`
+--
+
+INSERT INTO `scores` (`id`, `created_at`, `updated_at`, `deleted_at`, `point`, `user_id`, `quiz_id`) VALUES
+(14, '2024-02-21 15:06:55.102', '2024-02-21 15:08:43.156', NULL, 166.667, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -167,13 +178,12 @@ CREATE TABLE `transactions` (
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `qty` bigint(20) UNSIGNED NOT NULL,
+  `price` bigint(20) UNSIGNED NOT NULL,
   `pay` tinyint(1) NOT NULL DEFAULT 0,
   `cancel` tinyint(1) NOT NULL DEFAULT 0,
   `pay_at` datetime(3) DEFAULT NULL,
   `cancel_at` datetime(3) DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `price` bigint(20) UNSIGNED NOT NULL
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -189,24 +199,22 @@ CREATE TABLE `users` (
   `deleted_at` int(11) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
+  `block` tinyint(1) NOT NULL DEFAULT 0,
+  `wallet` int(11) NOT NULL DEFAULT 0,
   `password` longtext NOT NULL,
   `bio` varchar(300) DEFAULT NULL,
   `avatar` varchar(110) DEFAULT NULL,
-  `admin` tinyint(1) NOT NULL DEFAULT 0,
-  `wallet` int(11) NOT NULL DEFAULT 0,
-  `block` tinyint(1) NOT NULL DEFAULT 0
+  `admin` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `created_at`, `updated_at`, `deleted_at`, `username`, `email`, `password`, `bio`, `avatar`, `admin`, `wallet`, `block`) VALUES
-(5, '2024-02-07 13:09:55.000', '2024-02-07 13:09:55.000', NULL, 'adminsupreme', 'admin01@gmail.com', '$2y$10$P3ZC/prw1dWv6u6/U4Q5peOq7CVrkNGw5rxLIpDMz2nN1/MtfQgnq', NULL, NULL, 1, 0, 0),
-(6, '2024-02-07 13:19:47.293', '2024-02-07 13:19:47.293', NULL, 'bb3f31d0-9ce3-4e53-86ac-2aaced734fd3', 'admin2@gmail.com', '$2a$10$VggpHER4/UfIhNqR.lkzQOpej0VCojMliCAq.V7zmP66/3EDT87VK', NULL, NULL, 1, 0, 0),
-(7, '2024-02-10 23:07:19.261', '2024-02-12 10:39:30.404', NULL, 'userUrutKe3', 'user3@gmail.com', '$2a$10$x10q6MW6U2h7KibYMeu61exyYwaeibDCvIkZ8KE87GfLCJHLYTNlK', NULL, '/asset/img/user/691a1c05-177b-44fd-8ada-ecac1f90e422.png', 0, 0, 0),
-(8, '2024-02-12 16:43:02.846', '2024-02-12 16:43:02.846', NULL, 'userFiktif1', 'fictiveuser@gmail.com', '$2a$10$yLWCwJxlcI0UiV/TWX2RP.e9nX6iUbTsWvQO2TjheNMF5EuBRSKVy', NULL, NULL, 0, 0, 0),
-(9, '2024-02-15 19:17:04.000', '2024-02-15 19:19:48.000', NULL, 'admin_ke002', 'admin02@gmail.com', '$2y$10$Zsykp1rCn94sknTfGcOSGOzI.AeF6xB9xYWfoyBPjC44QLm9zDmTS', NULL, NULL, 0, 0, 0);
+INSERT INTO `users` (`id`, `created_at`, `updated_at`, `deleted_at`, `username`, `email`, `block`, `wallet`, `password`, `bio`, `avatar`, `admin`) VALUES
+(1, '2024-02-15 21:57:17.010', '2024-02-15 21:57:17.010', NULL, 'userFiktif1', 'fictiveuse01r@gmail.com', 0, 0, '$2a$10$0om.q4jzkNC1QSPssEGXy.uhCmvFdQDgwMWmA5ABQvbBkpFWvgtuu', NULL, NULL, 0),
+(2, '2024-02-19 16:12:51.000', '2024-02-19 16:12:51.000', NULL, 'adminKe1_001', 'admin01@gmail.com', 0, 0, '$2y$10$1MAJCFIyHElvlKeBWgLFc.7NcFreLV7WyMJ1Mm4F3qk.a518y8/4O', NULL, NULL, 1),
+(3, '2024-02-21 15:04:56.169', '2024-02-21 15:04:56.169', NULL, 'userFiktif2', 'fictiveuse02r@gmail.com', 0, 0, '$2a$10$KGMAQGYWYuKiP8UGCyDSP.Sp9yKRCJyoUzGQLZubazdyAvEPjtjMi', NULL, NULL, 0);
 
 --
 -- Indexes for dumped tables
@@ -277,10 +285,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `username_2` (`username`),
-  ADD UNIQUE KEY `email_2` (`email`),
-  ADD UNIQUE KEY `username_3` (`username`),
-  ADD UNIQUE KEY `email_3` (`email`),
   ADD KEY `idx_users_deleted_at` (`deleted_at`);
 
 --
@@ -291,13 +295,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `blacklist_tokens`
 --
 ALTER TABLE `blacklist_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -309,13 +313,13 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `quizzes`
 --
 ALTER TABLE `quizzes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `top_ups`
@@ -333,7 +337,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

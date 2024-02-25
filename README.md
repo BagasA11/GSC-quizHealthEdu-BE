@@ -17,10 +17,12 @@ Healthy Quiz is a health-themed quiz application to answer solutions in 2024. He
 ![jwt](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
 
 
-## Authors
+## Member of groups
 
 - [@bagasa11](https://www.github.com/bagasa11)
 - [@RAYNF](https://github.com/RAYNF)
+- [@davidsugiarto](daaddimaki04@gmail.com)
+- [#Ficky maulandani](muhammadficki01@gmail.com)
 
 
 

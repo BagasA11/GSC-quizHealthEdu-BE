@@ -21,7 +21,7 @@ import (
 // "BagasA11/GSC-quizHealthEdu-BE/api/dto"
 // os
 
-var Store = sessions.NewCookieStore([]byte("my-sessions-screet"))
+var Store = sessions.NewCookieStore([]byte("7aR9bYpL3jKvX5qF2wN6tH8eZsDxJ1"))
 
 type ScoreController struct {
 	service *service.ScoreService

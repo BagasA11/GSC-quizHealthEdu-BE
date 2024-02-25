@@ -73,20 +73,39 @@ Start the server: open cmd
 
 ## Configure
 
+### using Env file
+this is an Env file. You can change 
+some attributes as needed
+```bash
+MYSQL_HOST=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_USERNAME=root
+MYSQL_PASSWORD=
+MYSQL_DATABASE=golang-gsc2024
+HOST_PORT=8080
+
+JWT_SECRET_KEY=506c616e74207472656573
+
+GIN_MODE=debug
+SESSION_KEY=7aR9bYpL3jKvX5qF2wN6tH8eZsDxJ1
+
+```
+
+- SESSION_KEY Field
+Field SESSION_KEY is still not implemented because there is an issue when creating a new session with the gorilla package
+
+- Release mode
+If you want to deploy your system to an online server, change this section to 'release'.
+
+```bash
+GIN_MODE=release
+```
+
 ### mysql
-- Import SQL files from SQL Project files to MySQL client application
-- open project with code editor
-- go to db config file at:
+- Import SQL file from Project to MySQL client application
+- change MYSQL_DATABASE field in the .env with  your db name
 ```bash
-  GSC-quizHealthEdu-BE/configs/db.config.go
-```
-- change database name at line this:
-```bash
-  var Dsn = "root:@tcp(127.0.0.1:3306)/golang-gsc2024?charset=utf8mb4&parseTime=True&loc=Local"
-```
-- into:
-```bash
-  var Dsn = "root:@tcp(127.0.0.1:3306)/{db-name}?charset=utf8mb4&parseTime=True&loc=Local"
+  MYSQL_DATABASE={database name}
 ```
 
 ### postman
@@ -95,6 +114,9 @@ Start the server: open cmd
     GSC-quizHealthEdu-BE/GOOGLE SOLUTION CHALLANGE.postman_collection.json
 ```
 - import this file to postman workspace
+```bash
+  warning: Make sure that the database name, host, database username, and port match in the env file !!!
+```
 ## 🔗 Mobile apps repository
 https://github.com/RAYNF/HealtyQuizz
 

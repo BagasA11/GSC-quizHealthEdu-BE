@@ -135,7 +135,7 @@ func (qr *QuizRepository) SetDiscount(id uint, disc uint8) error {
 
 func (qr *QuizRepository) Delete(id uint) error {
 	tx := qr.Db.Begin()
-	err := tx.Model(&models.Quiz{}).Where("id = ?", id).Update("deleted_at", time.Now().Unix()).Error
+	err := tx.Model(&models.Quiz{}).Where("id = ? AND verified = ?", id, false).Update("deleted_at", time.Now().Unix()).Error
 	if err != nil {
 		tx.Rollback()
 		return err

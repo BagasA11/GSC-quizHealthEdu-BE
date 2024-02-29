@@ -17,10 +17,12 @@ Healthy Quiz is a health-themed quiz application to answer solutions in 2024. He
 ![jwt](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
 
 
-## Authors
+## Member of groups
 
 - [@bagasa11](https://www.github.com/bagasa11)
 - [@RAYNF](https://github.com/RAYNF)
+- [@davidsugiarto](daaddimaki04@gmail.com)
+- [#Ficky maulandani](muhammadficki01@gmail.com)
 
 
 
@@ -95,7 +97,7 @@ SESSION_KEY=7aR9bYpL3jKvX5qF2wN6tH8eZsDxJ1
 Field SESSION_KEY is still not implemented because there is an issue when creating a new session with the gorilla package
 
 - Release mode
-If you want to deploy your system to an online server, change this section to 'release'.
+If you want to deploy your this project to an online server, change 'GIN_MODE' field to 'release'.
 
 ```bash
 GIN_MODE=release

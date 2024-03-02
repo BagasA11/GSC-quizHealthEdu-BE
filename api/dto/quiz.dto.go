@@ -1,15 +1,17 @@
 package dto
 
 type QuizCreate struct {
-	Title string `form:"title"`
-	Topic string `form:"topic"`
-	Desc  string `form:"desc"`
+	Title    string `form:"title"`
+	Topic    string `form:"topic"`
+	Desc     string `form:"desc"`
+	Duration int    `form:"duration" binding:"required,max=30,min=0"`
 }
 
 type QuizEdit struct {
-	Title string `json:"title"`
-	Topic string `json:"topic"`
-	Desc  string `json:"desc"`
+	Title    string `json:"title"`
+	Topic    string `json:"topic"`
+	Desc     string `json:"desc"`
+	Duration int    `form:"duration" binding:"required,max=30,min=0"`
 }
 type Question struct {
 	Question string `json:"question" binding:"required"`

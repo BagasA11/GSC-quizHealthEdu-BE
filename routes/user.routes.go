@@ -19,6 +19,8 @@ func UserRoutes(group *gin.RouterGroup) {
 
 	//user
 	//User Registration
+	//using logger middleware
+	group.Use(middleware.Logger())
 	group.POST("/user/register", uc.CreateUser)
 	//user login
 	group.POST("/user/login", ac.UserLogin)

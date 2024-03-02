@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"BagasA11/GSC-quizHealthEdu-BE/api/dto"
-
 	"BagasA11/GSC-quizHealthEdu-BE/api/service"
+	"BagasA11/GSC-quizHealthEdu-BE/configs"
 	"fmt"
 	"net/http"
 
@@ -11,7 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/gorilla/sessions"
 )
 
 // "BagasA11/GSC-quizHealthEdu-BE/api/service"
@@ -21,7 +20,7 @@ import (
 // "BagasA11/GSC-quizHealthEdu-BE/api/dto"
 // os
 
-var Store = sessions.NewCookieStore([]byte("7aR9bYpL3jKvX5qF2wN6tH8eZsDxJ1"))
+// var Store = sessions.NewCookieStore([]byte("7aR9bYpL3jKvX5qF2wN6tH8eZsDxJ1"))
 
 type ScoreController struct {
 	service *service.ScoreService
@@ -36,7 +35,7 @@ func NewScoreController() *ScoreController {
 func (sc *ScoreController) CreateOrUpdate(c *gin.Context) {
 
 	//session object instance
-	session, err := Store.Get(c.Request, "attempt-quiz")
+	session, err := configs.Store.Get(c.Request, "attempt-quiz")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
